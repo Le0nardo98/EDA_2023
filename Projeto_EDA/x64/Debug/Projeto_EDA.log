@@ -1,0 +1,56 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Projeto_EDA.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  fase1.c
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\fase1.c(111,123): warning C4020: 'inserirGestor': too many actual parameters
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\fase1.c(207,76): warning C4047: '==': 'Meio *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\fase1.c(233,115): warning C4020: 'inserirGestor': too many actual parameters
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\fase1.c(16,13): warning C4101: 'bool': unreferenced local variable
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\fase1.c(18,58): warning C4101: 'codigo_login_utilizador': unreferenced local variable
+  funcoes.c
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(102,48): warning C4133: '=': incompatible types - from 'Meio *' to 'registo_meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(119,17): warning C4098: 'listarMeios': 'void' function returning a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(130,55): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(157,51): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(183,51): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(192,17): warning C4047: 'return': 'Meio *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(199,51): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(201,13): warning C4047: 'return': 'Meio *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(224,44): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(297,17): warning C4098: 'listarClientes': 'void' function returning a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(366,14): warning C4101: 'aux': unreferenced local variable
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(467,17): warning C4098: 'listarGestores': 'void' function returning a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(622,21): warning C4047: 'return': 'Gestor *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(631,25): warning C4047: 'return': 'Gestor *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(683,52): warning C4133: '=': incompatible types - from 'Meio *' to 'registo_meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(690,51): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(734,1): warning C4029: declared formal parameter list different from definition
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(827,35): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(836,41): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(919,41): warning C4101: 'senha': unreferenced local variable
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1231,51): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1266,21): warning C4047: 'return': 'Cliente *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1299,21): warning C4047: 'return': 'Cliente *' differs in levels of indirection from 'int'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1329,59): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1316,41): warning C4101: 'NIF': unreferenced local variable
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1420,17): warning C4098: 'listarGeocodigo': 'void' function returning a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1428,59): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1444,55): warning C4133: '=': incompatible types - from 'registo_meio *' to 'Meio *'
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1478,17): warning C4098: 'listarAluguer': 'void' function returning a value
+  Generating Code...
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(160): warning C4715: 'escreverFicheiro_meios': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(186): warning C4715: 'escreverFicheiro_meios_bin': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(361): warning C4715: 'escreverFicheiro_clientes_bin': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(336): warning C4715: 'escreverFicheiro_clientes': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(377): warning C4715: 'existeClienteCod': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(505): warning C4715: 'escreverFicheiro_gestores': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(392): warning C4715: 'existeClienteNIF': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(545): warning C4715: 'existeGestor': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(530): warning C4715: 'escreverFicheiro_gestores_bin': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(649): warning C4715: 'modoGestor': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1008): warning C4715: 'alterarGestor': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1105): warning C4715: 'alterarDadosCliente': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1308): warning C4715: 'consultaSaldo': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1233): warning C4715: 'alterarMeio': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1407): warning C4715: 'realizarAluguer': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1553): warning C4715: 'escreverFicheiro_aluguer': not all control paths return a value
+C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\Projeto_EDA\funcoes.c(1578): warning C4715: 'escreverFicheiro_aluguer_bin': not all control paths return a value
+  Projeto_EDA.vcxproj -> C:\Users\leomi\Documents\Universidade\3º Ano\2º Semestre\EDA\EDA_GIT\x64\Debug\Projeto_EDA_final.exe
