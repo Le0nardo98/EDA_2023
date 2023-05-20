@@ -1,0 +1,6 @@
+2;Dario Soares;192782172;400;maloca.fungos.poderia
+3;Diogo Silva;192102002;1000000;fracos.ovelha.quadradao
+5;Zepas Bieber;192768212;40;arrumar.etiquetar.pressione
+7;Pedro Maranhão;192424100;20;arrumar.etiquetar.pressione
+8;Pedro Maranhao;192018423;550;arrumar.etiquetar.pressione
+123;Jordan Vilaca;192111111;500;inala.fervido.engavetar

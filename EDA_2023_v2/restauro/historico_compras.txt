@@ -1,0 +1,6 @@
+1;     Thu Mar  9 10:13:16 2023;     Dario Soares;     NovoTipo
+1;     Thu Mar  9 10:13:23 2023;     Dario Soares;     Scooter
+1;     Thu Mar  9 21:46:43 2023;     Dario Soares;     teste
+242;     Thu Mar  9 21:47:25 2023;     Leonardo Araujo;     Bicicleta
+1;Thu May 11 16:29:08 2023;Pedro Maranhão;Scooter
+7;Thu May 11 16:36:08 2023;Pedro Maranhão;Scooter

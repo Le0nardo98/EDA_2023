@@ -1,0 +1,10 @@
+Mudar nomes das funções para sem _
+Mudar nomes dos grafos para maiusculas
+Inserir ordenado nas listas
+Mandar nome do ficheiro em vez de abrir e mandar
+Não escrever nada fora do main
+Main controlar com returns positivos e negativos
+Dividir ficheiros .h e .c por clientes, gestores e meios
+Carregar dados com txt e gravar com bin. A partir daí carregar sempre o bin
+Quando inserirmos o cliente na lista, montar o cliente primeiro e depois mandar para o método de inserir em vez de mandar os dados por argumento
+Retirar os limites das propriedades dos clientes. Exemplo NIF[50] para NIF[]

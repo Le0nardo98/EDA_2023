@@ -1,0 +1,4 @@
+3;Dario Soares;123;Thu Mar 16 17:45:13 2023
+2;Leonardo Araujo;123;Thu Mar 16 10:36:15 2023
+7;Ana Sofia;124;Thu Mar 16 17:44:27 2023
+7;Pedro Maranhão;100;Thu May 11 14:31:01 2023
