@@ -1,5 +1,10 @@
-/**
-*/
+/*****************************************************************//**
+ * @file   funcoes.h
+ * @brief  Conjunto de declarações de funções
+ *
+ * @author Leonardo Araújo
+ * @date   February 2023
+ *********************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,25 +60,25 @@ typedef struct RegistoGestor
 	char nome[MAX_LEN]; // nome do gestor
 	char senha[MAX_LEN]; // Senha do gestor
 	int encriptado; // Se a senha está encriptada.
-	char area_responsavel[MAX_LEN];
+	char areaResponsavel[MAX_LEN];
 	struct RegistoGestor* seguinteGestor; // endereço de memória para uma struct registo_gestor
 } Gestor;
 
 typedef struct RegistoAluguer
 {
-	char data_compra[MAX_LEN]; // Data de compra de um certo meio
-	char nome_comprador[MAX_LEN]; // Nome do comprador.
-	char nome_meio_comprado[MAX_LEN]; // Nome do meio.
-	int cod_comprador; // Codigo do comprador.
+	char dataCompra[MAX_LEN]; // Data de compra de um certo meio
+	char nomeComprador[MAX_LEN]; // Nome do comprador.
+	char nomeMeioComprado[MAX_LEN]; // Nome do meio.
+	int codComprador; // Codigo do comprador.
 	struct RegistoAluguer* seguinteCompra;
 }Aluguer;
 
 typedef struct RegistoTransacoes
 {
-	int codigo_utilizador;
-	char nome_transacao[MAX_LEN];
-	int montante_carregado;
-	char data_transacao[MAX_LEN];
+	int codigoUtilizador;
+	char nomeTransacao[MAX_LEN];
+	int montanteCarregado;
+	char dataTransacao[MAX_LEN];
 	struct RegistoTransacoes* seguinteTransacao;
 }Transacao;
 
@@ -92,7 +97,7 @@ typedef struct Grafo
 	Adjacente* adjacentes;
 	Cliente* clientes;
 	Meio* meios; // Lista ligada com os códigos dos meios de transporte existente neste geocódigo
-	struct Grafo* seguinte_vertice;
+	struct Grafo* seguinteVertice;
 } Grafo;
 
 #pragma region STACK
@@ -101,13 +106,13 @@ typedef struct Stack
 {
 	char vertice[MAX_LEN];
 	bool visitado;
-	struct Stack* seguinte_stack;
+	struct Stack* seguinteStack;
 }Stack;
 
 typedef struct ListaStack
 {
 	Stack* novaStack;
-	struct ListaStack* seguinte_lista;
+	struct ListaStack* seguinteLista;
 } ListaStack;
 
 #pragma endregion
@@ -115,57 +120,53 @@ typedef struct ListaStack
 
 int menu();
 
-int menu_utilizador();
+int menuUtilizador();
 
-int menu_gestor();
+int menuGestor();
 
 
 // -------------------------------------------------FUNÇÕES_I-LEITURA/ESCRITA/REPRESENTAÇÃO DE MEIOS-------------------------------------------------
 
 
-Meio* lerFicheiroMeios(Meio* inicio, FILE* dados_meios);
+Meio* lerFicheiroMeios(Meio* inicio, char fileName[]);
 
-ResFuncoes listarMeios(Meio* inicio_meios);
+ResFuncoes listarMeios(Meio* inicioMeios);
 
-void listarGeocodigo(Meio* inicio_meios);
+void listarGeocodigo(Meio* inicioMeios);
 
-int escreverFicheiroMeios(Meio* inicio_meios, char fileName[]);
+int escreverFicheiroMeios(Meio* inicioMeios, char fileName[]);
 
-int escreverFicheiroMeiosBin(Meio* inicio_meios, char fileName []);
+int escreverFicheiroMeiosBin(Meio* inicioMeios, char fileName []);
 
-ResFuncoes existeMeio(Meio* inicio_meios, int cod);
+ResFuncoes existeMeio(Meio* inicioMeios, int cod);
 
-Meio* bubbleSortMeios(Meio* inicio_meios);
-
+Meio* bubbleSortMeios(Meio* inicioMeios);
 
 
 // -------------------------------------------------FUNÇÕES_F-LEITURA/ESCRITA/REPRESENTAÇÃO DE MEIOS-------------------------------------------------
 
 
-
-
-
 // -------------------------------------------------FUNÇÕES_I-LEITURA/ESCRITA/REPRESENTAÇÃO DE CLIENTES-------------------------------------------------
 
-Cliente* lerFicheiroClientes(Cliente* inicio_clientes, FILE* dados_clientes);
+Cliente* lerFicheiroClientes(Cliente* inicioClientes, char fileName[]);
 
-ResFuncoes listarClientes(Cliente* inicio_clientes);
+ResFuncoes listarClientes(Cliente* inicioClientes);
 
-int escreverFicheiroClientes(Cliente* inicio_clientes, char fileName[]);
+int escreverFicheiroClientes(Cliente* inicioClientes, char fileName[]);
 
-int escreverFicheiroClientesBin(Cliente* inicio_clientes, char fileName[]);
+int escreverFicheiroClientesBin(Cliente* inicioClientes, char fileName[]);
 
-Cliente *carregarSaldo(Cliente* inicio_clientes, Transacao* inicioTransacao);
+Cliente *carregarSaldo(Cliente* inicioClientes, Transacao* inicioTransacao);
 
-ResFuncoes consultaSaldo(Cliente * inicio_clientes);
+ResFuncoes consultaSaldo(Cliente * inicioClientes);
 
-ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicioTransacao);
+ResFuncoes alterarDadosCliente(Cliente* inicioClientes, Transacao* inicioTransacao);
 
-int existeClienteCod(Cliente* inicio_clientes, int cod);
+int existeClienteCod(Cliente* inicioClientes, int cod);
 
-int existeClienteNIF(Cliente* inicio_clientes, int NIF);
+int existeClienteNIF(Cliente* inicioClientes, int NIF);
 
-Cliente* bubbleSortClientes(Cliente* inicio_clientes);
+Cliente* bubbleSortClientes(Cliente* inicioClientes);
 
 
 // -------------------------------------------------FUNÇÕES_F-LEITURA/ESCRITA/REPRESENTAÇÃO DE CLIENTES-------------------------------------------------
@@ -173,17 +174,17 @@ Cliente* bubbleSortClientes(Cliente* inicio_clientes);
 
 // -------------------------------------------------FUNÇÕES_I-LEITURA/ESCRITA/REPRESENTAÇÃO DE GESTORES-------------------------------------------------
 
-Gestor* lerFicheiroGestores(Gestor* inicio_gestor, FILE* dados_gestor);
+Gestor* lerFicheiroGestores(Gestor* inicioGestor, char fileName[]);
 
-void listarGestores(Gestor* inicio_gestor);
+void listarGestores(Gestor* inicioGestor);
 
-int escreverFicheiroGestores(Gestor* inicio_gestor, char fileName[]);
+int escreverFicheiroGestores(Gestor* inicioGestor, char fileName[]);
 
-int escreverFicheiroGestoresBin(Gestor* inicio_gestor, char fileName[]);
+int escreverFicheiroGestoresBin(Gestor* inicioGestor, char fileName[]);
 
-int existeGestor(Gestor* inicio_gestor, int cod);
+int existeGestor(Gestor* inicioGestor, int cod);
 
-Gestor* bubbleSortGestores(Gestor* inicio_gestores);
+Gestor* bubbleSortGestores(Gestor* inicioGestores);
 
 
 // -------------------------------------------------FUNÇÕES_F-LEITURA/ESCRITA/REPRESENTAÇÃO DE GESTORES-------------------------------------------------
@@ -191,93 +192,99 @@ Gestor* bubbleSortGestores(Gestor* inicio_gestores);
 
 // ---------------------------------------------------FUNÇÕES_I-ADICIONAR/REMOVER/ALTERAR MEIOS/CLIENTES/GESTORES----------------------------------------------------
 
-Gestor* modoGestor(Gestor* inicio_gestores);
+Gestor* modoGestor(Gestor* inicioGestores);
 
-Meio* inserirMeio(Grafo* inicio_grafo, Meio* inicio_meios, int cod, char nome[], float bat, float aut, int custo, char geo[]);
+Meio* criarMeio(Grafo* inicioGrafo, Meio* inicioMeios, int cod, char nome[], float bat, float aut, int custo, char geo[]);
 
-Cliente* inserirCliente(Cliente* inicio_clientes, int cod, char nome[], int NIF, int saldo, char geocodigo[]);
+Meio* inserirMeio(Grafo* inicioGrafo, Meio* inicioMeios, Meio* meio);
 
-Gestor* inserirGestor(Gestor* inicio_gestor, int cod, char nome[], char senha[], char area[]);
+Cliente* criarCliente(int cod, char nome[], int NIF, int saldo, char geocodigo[]);
 
-Meio* removerMeio(Meio* inicio_meios, int cod);
+Cliente* inserirCliente(Cliente* inicioClientes, Cliente* cliente);
 
-Cliente* removerCliente(Cliente* inicio_clientes, int cod);
+Gestor* criarGestor(Gestor* inicioGestor, int cod, char nome[], char senha[], char area[]);
 
-Gestor* removerGestor(Gestor* inicio_gestores, int cod);
+Gestor* inserirGestor(Gestor* inicioGestor, Gestor* gestor);
 
-Meio* alterarMeio(Meio* inicio_meios);
+Meio* removerMeio(Meio* inicioMeios, int cod);
 
-Gestor* alterarGestor(Gestor* inicio_gestores);
+Cliente* removerCliente(Cliente* inicioClientes, int cod);
 
-int encryptSenha(Gestor* inicio_gestor, char senha[]);
+Gestor* removerGestor(Gestor* inicioGestores, int cod);
 
-int decryptSenha(Gestor* inicio_gestor, char senha[]);
+Meio* alterarMeio(Meio* inicioMeios);
+
+Gestor* alterarGestor(Gestor* inicioGestores);
+
+int encryptSenha(Gestor* inicioGestor, char senha[]);
+
+int decryptSenha(Gestor* inicioGestor, char senha[]);
 // ---------------------------------------------------FUNÇÕES_F-ADICIONAR/REMOVER/ALTERAR MEIOS/CLIENTES/GESTORES----------------------------------------------------
 
 // -------------------------------------------------------------------FUNÇÕES_I-ALUGUER--------------------------------------------------------------------
 
-void listarAluguer(Aluguer* inicio_aluguer);
+void listarAluguer(Aluguer* inicioAluguer);
 
-Aluguer* bubbleSortAluguer(Aluguer* inicio_aluguer);
+Aluguer* bubbleSortAluguer(Aluguer* inicioAluguer);
 
-int escreverFicheiroAluguer(Aluguer* inicio_aluguer, char fileName[]);
+int escreverFicheiroAluguer(Aluguer* inicioAluguer, char fileName[]);
 
-int escreverFicheiroAluguerBin(Aluguer* inicio_aluguer, char fileName[]);
+int escreverFicheiroAluguerBin(Aluguer* inicioAluguer, char fileName[]);
 
-Aluguer* realizarAluguer(Cliente* inicio_clientes, Aluguer* inicio_aluguer, Meio* inicio_meios); //precisa de adaptação
+Aluguer* realizarAluguer(Cliente* inicioClientes, Aluguer* inicioAluguer, Meio* inicioMeios); //precisa de adaptação
 
 //NOVOS
-Aluguer* lerFicheiroAluguer(Aluguer* inicio_aluguer, FILE* dados_aluguer);
+Aluguer* lerFicheiroAluguer(Aluguer* inicioAluguer, FILE* dadosAluguer);
 
-void listarAluguer(Aluguer* inicio_aluguer);
+void listarAluguer(Aluguer* inicioAluguer);
 
-Aluguer* bubbleSortAluguer(Aluguer* inicio_aluguer);
+Aluguer* bubbleSortAluguer(Aluguer* inicioAluguer);
 
-Aluguer* realizarAluguer(Cliente* inicio_clientes, Aluguer* inicio_aluguer, Meio* inicio_meios);
+Aluguer* realizarAluguer(Cliente* inicioClientes, Aluguer* inicioAluguer, Meio* inicioMeios);
 
 // -------------------------------------------------------------------FUNÇÕES_F-ALUGUER--------------------------------------------------------------------
 
 #pragma region GRAFO
 // -------------------------------------------------------------------FUNÇÕES_I-CIDADES--------------------------------------------------------------------
-Grafo* lerFicheiroVertices(Grafo* inicio_grafo, Meio* inicio_meios, FILE* dados_vertices);
+Grafo* lerFicheiroVertices(Grafo* inicioGrafo, Meio* inicioMeios, char fileName[]);
 
-void testeCLientes(Grafo* inicio_grafo);
+void testeCLientes(Grafo* inicioGrafo);
 
-Grafo* adicionarClientesGrafo(Grafo* inicio_grafo, Cliente* inicio_clientes);
+Grafo* adicionarClientesGrafo(Grafo* inicioGrafo, Cliente* inicioClientes);
 
-Grafo* adicionarMeiosGrafo(Grafo* inicio_grafo, Meio* inicio_meios);
+Grafo* adicionarMeiosGrafo(Grafo* inicioGrafo, Meio* inicioMeios);
 
-Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes);
+Grafo* lerFicheiroAdjacentes(Grafo* inicioGrafo, char fileName[]);
 
-ResFuncoes localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_cliente, float raio, int codigo);
+ResFuncoes localizacaoRaio(Grafo* inicioGrafo, Cliente* inicio_cliente, float raio, int codigo);
 
-void printTestGrafo(Grafo* inicio_grafo);
+void printTestGrafo(Grafo* inicioGrafo);
 
-int escreverFicheiroGrafo(Grafo* inicio_grafo, char fileName []);
+int escreverFicheiroGrafo(Grafo* inicioGrafo, char fileName []);
 
-int existeVertice(Grafo* inicio_grafo, char verticeVerificar[]);
+int existeVertice(Grafo* inicioGrafo, char verticeVerificar[]);
 
-int inserirVertice(Grafo* inicio_grafo, char verticeInserir[]);
+int inserirVertice(Grafo* inicioGrafo, char verticeInserir[]);
 
-int inserirAdjacente(Grafo* inicio_grafo, char verticeInicial[], char verticeFinal[], float peso);
+int inserirAdjacente(Grafo* inicioGrafo, char verticeInicial[], char verticeFinal[], float peso);
 
-void listarGrafo(Grafo* inicio_grafo);
+void listarGrafo(Grafo* inicioGrafo);
 
-int totalVertices(Grafo* inicio_grafo);
+int totalVertices(Grafo* inicioGrafo);
 
-void listarAdjacentes(Grafo* inicio_grafo);
+void listarAdjacentes(Grafo* inicioGrafo);
 
-ListaStack* caminhoTexto(Grafo* inicio_grafo, char verticeAtual[], char verticeDestino[], Stack* inicio_stack, ListaStack* inicio_lista);
+ListaStack* caminhoTexto(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista);
 
-bool verticeVisitado(Stack* inicio_stack, char vertice[]);
+bool verticeVisitado(Stack* inicioStack, char vertice[]);
 
 #pragma endregion
 
 #pragma region STACK
 
-Stack* push(Stack* inicio_stack, char vertice[]);
+Stack* push(Stack* inicioStack, char vertice[]);
 
-void mostrarCaminho(ListaStack* inicio_stack);
+void mostrarCaminho(ListaStack* inicioStack);
 #pragma endregion
 // -------------------------------------------------------------------FUNÇÕES_F-CIDADES--------------------------------------------------------------------
 
@@ -285,17 +292,17 @@ void mostrarCaminho(ListaStack* inicio_stack);
 #pragma region TRANSACOES
 // -------------------------------------------------------------------FUNÇÕES_I-TRANSACOES--------------------------------------------------------------------
 
-Transacao* lerFicheiroTransacao(Transacao* inicio_transacao, FILE* dados_transacao);
+Transacao* lerFicheiroTransacao(Transacao* inicioTransacao, char fileName[]);
 
-int escreverFicheiroTransacao(Transacao* inicio_transacao, char fileName[]);
+int escreverFicheiroTransacao(Transacao* inicioTransacao, char fileName[]);
 
-int escreverFicheiroTransacaoBin(Transacao* inicio_transacao, char fileName[]);
+int escreverFicheiroTransacaoBin(Transacao* inicioTransacao, char fileName[]);
 
-void listarTransacao(Transacao* inicio_transacao);
+void listarTransacao(Transacao* inicioTransacao);
 
-int existeClienteTransacao(Transacao* inicio_transacao, int codVerificar);
+int existeClienteTransacao(Transacao* inicioTransacao, int codVerificar);
 
-Transacao* criarTransacao(Transacao* inicio_transacao, int codigoCliente, int saldoCarregar, char nomeCliente[50]);
+Transacao* criarTransacao(Transacao* inicioTransacao, int codigoCliente, int saldoCarregar, char nomeCliente[]);
 
 
 // -------------------------------------------------------------------FUNÇÕES_F-TRANSACOES--------------------------------------------------------------------

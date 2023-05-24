@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   funcoes.c
+ * @brief  Conjunto de funções
+ *
+ * @author Leonardo Araújo
+ * @date   February 2023
+ *********************************************************************/
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,10 +36,10 @@ int menu()
 }
 #pragma endregion 
 
-#pragma region MENU_GESTOR
+#pragma region menuGestor
 
 //Menu do gestor. Retorna a opção escolhida pelo gestor, para executar uma tarefa.
-int menu_gestor()
+int menuGestor()
 {
     int escolha;
     printf("\nO que pretende fazer?\n");
@@ -53,17 +61,17 @@ int menu_gestor()
     printf("16 - Adicionar Adjacentes.\n");
     printf("0 - Sair.\n");
     printf("A sua escolha: ");
-    scanf("%d", &escolha);
+    (void)scanf("%d", &escolha);
 
     return escolha;
 }
 
 #pragma endregion
 
-#pragma region MENU_UTILIZADOR
+#pragma region menuUtilizador
 
 //Menu do utilizador. Retorna o valor escolhido, para execução de uma tarefa.
-int menu_utilizador()
+int menuUtilizador()
 {
     int escolha;
     printf("\nO que pretende fazer?\n");
@@ -92,46 +100,48 @@ int menu_utilizador()
 // Serão todos os dados, inseridos numa lista ligada, que de inicio é vazia.
 /*
 */
-Meio* lerFicheiroMeios(Meio* inicio_meios, FILE* dados_meios)
+Meio* lerFicheiroMeios(Meio* inicioMeios, char fileName[])
 {
+    FILE* dadosMeios = fopen(fileName, "rt");
+
     // Definição de variáveis.
     char linha[MAX_LINE_LEN];
-    // Usando a função fgets, lemos a partir do ficheiro dados_meios todo o seu conteúdo, onde é armazenado em cada novo_nodo criado
+    // Usando a função fgets, lemos a partir do ficheiro dadosMeios todo o seu conteúdo, onde é armazenado em cada novoNodo criado
     // Depois é atribuido ao inicio o valor de cada nodo criado, de seguida fechamos o ficheiro e por fim damos return da variavel inicio,
     // Contendo assim toda as informações e pointers necessários para criar a lista ligada.
-    while (fgets(linha, MAX_LINE_LEN, dados_meios))
+    while (fgets(linha, MAX_LINE_LEN, dadosMeios))
     {
-        // Enquanto é possivel obter texto do ficheiro dados_meios, irá ser criado um novo espaço na memória para a struct meios
-        // A cada iteração é atribuido todo o conteudo obtido ao inicio_meios, criando assim uma lista ligada.
-        Meio* novo_nodo = malloc(sizeof(Meio));
-        sscanf(linha, "%d;%[^;];%f;%f;%d;%[^;];%d\n", &novo_nodo->codigo, novo_nodo->tipo, &novo_nodo->bateria, &novo_nodo->autonomia, &novo_nodo->custo, novo_nodo->geocodigo, &novo_nodo->ativo);
-        // O seguinte valor de memória é igual a inicio_meios que foi inicializado a NULL, para de seguida ser possivel atribuir outro elemento da lista ligada.
-        novo_nodo->seguinteMeio = inicio_meios;
-        // Inicio_meios vai obter toda a informação que foi lida por novo_nodo
-        inicio_meios = novo_nodo;
+        // Enquanto é possivel obter texto do ficheiro dadosMeios, irá ser criado um novo espaço na memória para a struct meios
+        // A cada iteração é atribuido todo o conteudo obtido ao inicioMeios, criando assim uma lista ligada.
+        Meio* novoNodo = malloc(sizeof(Meio));
+        sscanf(linha, "%d;%[^;];%f;%f;%d;%[^;];%d\n", &novoNodo->codigo, novoNodo->tipo, &novoNodo->bateria, &novoNodo->autonomia, &novoNodo->custo, novoNodo->geocodigo, &novoNodo->ativo);
+        // O seguinte valor de memória é igual a inicioMeios que foi inicializado a NULL, para de seguida ser possivel atribuir outro elemento da lista ligada.
+        novoNodo->seguinteMeio = inicioMeios;
+        // inicioMeios vai obter toda a informação que foi lida por novoNodo
+        inicioMeios = novoNodo;
     }
-    fclose(dados_meios);
-    return inicio_meios;
+    fclose(dadosMeios);
+    return inicioMeios;
 }
 
 // Apresenta na consola toda a informação existente sobre os clientes.
-ResFuncoes listarMeios(Meio* inicio_meios)
+ResFuncoes listarMeios(Meio* inicioMeios)
 {
     system("cls");
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
     {
         return MEIOS_NAO_EXISTEM;
     }
     else
     {
-        // Enquanto o pointer inicio_meios não for NULL (que esse mesmo está sempre a apontar para um valor de memória diferente na lista ligada)
+        // Enquanto o pointer inicioMeios não for NULL (que esse mesmo está sempre a apontar para um valor de memória diferente na lista ligada)
         // É apresentada a informação dos meios.
         printf("Dados de meios disponiveis:\n------------------------------------------------------------------------------------------------------------------------\n\n");
-        while (inicio_meios != NULL)
+        while (inicioMeios != NULL)
         {
-            printf("Codigo: %d    Tipo: %s  Nivel Bateria: %.2f  Autonomia: %.2f  Custo: %d Geocodigo: %s Ativo: %d\n", inicio_meios->codigo, inicio_meios->tipo,
-                inicio_meios->bateria, inicio_meios->autonomia, inicio_meios->custo, inicio_meios->geocodigo, inicio_meios->ativo);
-            inicio_meios = inicio_meios->seguinteMeio;
+            printf("Codigo: %d    Tipo: %s  Nivel Bateria: %.2f  Autonomia: %.2f  Custo: %d Geocodigo: %s Ativo: %d\n", inicioMeios->codigo, inicioMeios->tipo,
+                inicioMeios->bateria, inicioMeios->autonomia, inicioMeios->custo, inicioMeios->geocodigo, inicioMeios->ativo);
+            inicioMeios = inicioMeios->seguinteMeio;
         }
         printf("------------------------------------------------------------------------------------------------------------------------\n\n");
     }
@@ -139,78 +149,78 @@ ResFuncoes listarMeios(Meio* inicio_meios)
 }
 
 // Escreve todos os dados inseridos sobre os meios, em ficheiro de texto.
-int escreverFicheiroMeios(Meio* inicio_meios, char fileName [])
+int escreverFicheiroMeios(Meio* inicioMeios, char fileName [])
 {
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
     {
         return -1;
     }
-    FILE *dados_meios = fopen(fileName, "wt");
+    FILE *dadosMeios = fopen(fileName, "wt");
 
-    if (dados_meios == NULL)
+    if (dadosMeios == NULL)
     {
         return -2;
     }
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        fprintf(dados_meios, "%d;%s;%.2f;%.2f;%d;%s;%d\n", inicio_meios->codigo, inicio_meios->tipo, inicio_meios->bateria, inicio_meios->autonomia,
-            inicio_meios->custo, inicio_meios->geocodigo, inicio_meios->ativo);
-        inicio_meios = inicio_meios->seguinteMeio;
+        fprintf(dadosMeios, "%d;%s;%.2f;%.2f;%d;%s;%d\n", inicioMeios->codigo, inicioMeios->tipo, inicioMeios->bateria, inicioMeios->autonomia,
+            inicioMeios->custo, inicioMeios->geocodigo, inicioMeios->ativo);
+        inicioMeios = inicioMeios->seguinteMeio;
     }
-    fclose(dados_meios);
+    fclose(dadosMeios);
     return 1;
 }
 
 // Escreve todos os dados inseridos sobre os meios, em ficheiro binário.
-int escreverFicheiroMeiosBin(Meio* inicio_meios, char fileName[])
+int escreverFicheiroMeiosBin(Meio* inicioMeios, char fileName[])
 {
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
     {
         return -1;
     }
-    FILE *dados_meios = fopen(fileName, "wb");
-    if (dados_meios == NULL)
+    FILE *dadosMeios = fopen(fileName, "wb");
+    if (dadosMeios == NULL)
     {
         return -2;
     }
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        fwrite(inicio_meios, 1, sizeof(Meio), dados_meios);
-        inicio_meios = inicio_meios->seguinteMeio;
+        fwrite(inicioMeios, 1, sizeof(Meio), dadosMeios);
+        inicioMeios = inicioMeios->seguinteMeio;
     }
-    fclose(dados_meios);
+    fclose(dadosMeios);
     return 1;
 }
 
 // Verifica, consoante o endereço de memória de certo meio, se o seu código é igual ao que foi inserido para um novo meio.
-ResFuncoes existeMeio(Meio* inicio_meios, int cod)
+ResFuncoes existeMeio(Meio* inicioMeios, int cod)
 {
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
         return 1; //mudar return
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        if (inicio_meios->codigo == cod)
+        if (inicioMeios->codigo == cod)
         {
             return 0; //mudar return
         }
-        inicio_meios = inicio_meios->seguinteMeio;
+        inicioMeios = inicioMeios->seguinteMeio;
     }
     return 1; //mudar return
 }
 
 // Verifica cada meio existente, se o seu valor de autonomia do elemento que está a verificar for maior que o elemento seguinte, irá ser feita uma troca
 // para ordenar todos os elementos da lista ligada por um valor decrescente a nivel de autonomia.
-Meio* bubbleSortMeios(Meio* inicio_meios)
+Meio* bubbleSortMeios(Meio* inicioMeios)
 {
     Meio* atual, * seguinte;
-    int b = 1, aux_codigo, aux_custo, aux_ativo;
-    float aux_bat, aux_aut;
-    char aux_nome[MAX_LEN], aux_geo[MAX_LEN];
+    int b = 1, auxCodigo, auxCusto, auxAtivo;
+    float auxBat, auxAut;
+    char auxNome[MAX_LEN], auxGeo[MAX_LEN];
 
     while (b)
     {
         b = 0;
-        atual = inicio_meios;
+        atual = inicioMeios;
         if (atual == NULL)
         {
             return 0;
@@ -220,13 +230,13 @@ Meio* bubbleSortMeios(Meio* inicio_meios)
             seguinte = atual->seguinteMeio;
             if (atual->autonomia < seguinte->autonomia)
             {
-                aux_codigo = atual->codigo;
-                aux_bat = atual->bateria;
-                aux_aut = atual->autonomia;
-                aux_custo = atual->custo;
-                strcpy(aux_nome, atual->tipo);
-                strcpy(aux_geo, atual->geocodigo);
-                aux_ativo = atual->ativo;
+                auxCodigo = atual->codigo;
+                auxBat = atual->bateria;
+                auxAut = atual->autonomia;
+                auxCusto = atual->custo;
+                strcpy(auxNome, atual->tipo);
+                strcpy(auxGeo, atual->geocodigo);
+                auxAtivo = atual->ativo;
 
                 atual->codigo = seguinte->codigo;
                 atual->bateria = seguinte->bateria;
@@ -236,35 +246,35 @@ Meio* bubbleSortMeios(Meio* inicio_meios)
                 strcpy(atual->geocodigo, seguinte->geocodigo);
                 atual->ativo = seguinte->ativo;
 
-                seguinte->codigo = aux_codigo;
-                seguinte->bateria = aux_bat;
-                seguinte->autonomia = aux_aut;
-                seguinte->custo = aux_custo;
-                strcpy(seguinte->tipo, aux_nome);
-                strcpy(seguinte->geocodigo, aux_geo);
-                seguinte->ativo = aux_ativo;
+                seguinte->codigo = auxCodigo;
+                seguinte->bateria = auxBat;
+                seguinte->autonomia = auxAut;
+                seguinte->custo = auxCusto;
+                strcpy(seguinte->tipo, auxNome);
+                strcpy(seguinte->geocodigo, auxGeo);
+                seguinte->ativo = auxAtivo;
 
                 b = 1;
             }
             atual = seguinte;
         }
     }
-    inicio_meios = atual;
-    return inicio_meios;
+    inicioMeios = atual;
+    return inicioMeios;
 }
 
-ResFuncoes mediaAutonomia(Meio* inicio_meios)
+ResFuncoes mediaAutonomia(Meio* inicioMeios)
 {
     int tamanho = 0;
     float resultado = 0;
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
     {
         return -1;
     }
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        resultado += inicio_meios->autonomia;
-        inicio_meios = inicio_meios->seguinteMeio;
+        resultado += inicioMeios->autonomia;
+        inicioMeios = inicioMeios->seguinteMeio;
         tamanho++;
     }
     resultado = resultado / tamanho;
@@ -282,30 +292,31 @@ ResFuncoes mediaAutonomia(Meio* inicio_meios)
 
 // Ler ficheiro de texto, contendo informação sobre os clientes.
 // Serão todos os dados, inseridos numa lista ligada, que de inicio é vazia.
-Cliente* lerFicheiroClientes(Cliente* inicio_clientes, FILE* dados_clientes)
+Cliente* lerFicheiroClientes(Cliente* inicioClientes, char fileName[])
 {
+    FILE* dadosClientes = fopen(fileName, "rt");
     // Definição de variáveis.
     char linha[MAX_LINE_LEN];
 
-    //Usando a função fgets, lemos a partir do ficheiro dados_clientes todo o seu conteúdo, onde é armazenado em cada novo_nodo criado
+    //Usando a função fgets, lemos a partir do ficheiro dadosClientes todo o seu conteúdo, onde é armazenado em cada novoNodo criado
     //Depois é atribuido ao inicio o valor de cada nodo criado, de seguida fechamos o ficheiro e por fim damos return da variavel inicio,
     //Contendo assim toda as informações e pointers necessários para criar a lista ligada.
 
-    while (fgets(linha, MAX_LINE_LEN, dados_clientes))
+    while (fgets(linha, MAX_LINE_LEN, dadosClientes))
     {
-        Cliente* novo_nodo = malloc(sizeof(struct RegistoClientes));
-        sscanf(linha, "%d;%[^;];%d;%d;%s\n", &novo_nodo->codigo, novo_nodo->nome, &novo_nodo->NIF, &novo_nodo->saldo, novo_nodo->geocodigo);
-        novo_nodo->seguinteCliente = inicio_clientes;
-        inicio_clientes = novo_nodo;
+        Cliente* novoNodo = malloc(sizeof(struct RegistoClientes));
+        sscanf(linha, "%d;%[^;];%d;%d;%s\n", &novoNodo->codigo, novoNodo->nome, &novoNodo->NIF, &novoNodo->saldo, novoNodo->geocodigo);
+        novoNodo->seguinteCliente = inicioClientes;
+        inicioClientes = novoNodo;
     }
-    fclose(dados_clientes);
-    return inicio_clientes;
+    fclose(dadosClientes);
+    return inicioClientes;
 }
 
 // Apresenta na consola toda a informação existente sobre os clientes.
-ResFuncoes listarClientes(Cliente* inicio_clientes)
+ResFuncoes listarClientes(Cliente* inicioClientes)
 {
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         perror("Nao existem clientes.\n"); //melhorar para perror
         return 0;
@@ -313,100 +324,100 @@ ResFuncoes listarClientes(Cliente* inicio_clientes)
     else
     {
         printf("\nDados de Clientes:\n------------------------------------------------------------------------------------------------------------------------\n");
-        // Enquanto o pointer inicio_clientes não for NULL (que esse mesmo está sempre a apontar para um valor de memória diferente na lista ligada)
+        // Enquanto o pointer inicioClientes não for NULL (que esse mesmo está sempre a apontar para um valor de memória diferente na lista ligada)
         // É apresentada a informação dos clientes.
-        while (inicio_clientes != NULL)
+        while (inicioClientes != NULL)
         {
-            printf("Codigo: %d    Nome: %s     NIF: %d      Saldo: %d\n", inicio_clientes->codigo, inicio_clientes->nome, inicio_clientes->NIF, inicio_clientes->saldo);
-            inicio_clientes = inicio_clientes->seguinteCliente;
+            printf("Codigo: %d    Nome: %s     NIF: %d      Saldo: %d\n", inicioClientes->codigo, inicioClientes->nome, inicioClientes->NIF, inicioClientes->saldo);
+            inicioClientes = inicioClientes->seguinteCliente;
         }
         printf("------------------------------------------------------------------------------------------------------------------------");
     }
 }
 
 // Escreve todos os dados inseridos sobre os clientes, em ficheiro de texto.
-int escreverFicheiroClientes(Cliente* inicio_clientes, char fileName[])
+int escreverFicheiroClientes(Cliente* inicioClientes, char fileName[])
 {
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         return -1;
     }
-    FILE *dados_clientes = fopen(fileName, "wt");
-    if (dados_clientes == NULL)
+    FILE *dadosClientes = fopen(fileName, "wt");
+    if (dadosClientes == NULL)
     {
         return -2;
     }
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        fprintf(dados_clientes, "%d;%s;%d;%d;%s\n", inicio_clientes->codigo, inicio_clientes->nome, inicio_clientes->NIF, inicio_clientes->saldo, inicio_clientes->geocodigo);
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        fprintf(dadosClientes, "%d;%s;%d;%d;%s\n", inicioClientes->codigo, inicioClientes->nome, inicioClientes->NIF, inicioClientes->saldo, inicioClientes->geocodigo);
+        inicioClientes = inicioClientes->seguinteCliente;
     }
 
-    fclose(dados_clientes);
+    fclose(dadosClientes);
     return 1;
 }
 
 // Escreve todos os dados inseridos sobre os clientes, em ficheiro binário.
-int escreverFicheiroClientesBin(Cliente* inicio_clientes, char fileName[])
+int escreverFicheiroClientesBin(Cliente* inicioClientes, char fileName[])
 {
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         return -1;
     }
-    FILE *dados_clientes = fopen(fileName, "wb");
-    if (dados_clientes == NULL)
+    FILE *dadosClientes = fopen(fileName, "wb");
+    if (dadosClientes == NULL)
     {
         return -2;
     }
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        fwrite(inicio_clientes, 1, sizeof(Cliente), dados_clientes);
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        fwrite(inicioClientes, 1, sizeof(Cliente), dadosClientes);
+        inicioClientes = inicioClientes->seguinteCliente;
     }
-    fclose(dados_clientes);
+    fclose(dadosClientes);
     return 1;
 }
 
 // Verifica, consoante o endereço de memória de um certo utilizador, se o seu código é igual ao que foi inserido para um novo utilizador.
-int existeClienteCod(Cliente* inicio_clientes, int cod)
+int existeClienteCod(Cliente* inicioClientes, int cod)
 {
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        if (inicio_clientes->codigo == cod)
+        if (inicioClientes->codigo == cod)
         {
             return 0;
         }
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        inicioClientes = inicioClientes->seguinteCliente;
     }
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
         return 1;
 }
 
 // Verifica, consoante o endereço de memória de um certo utilizador, se o seu NIF é igual ao que foi inserido para um novo utilizador.
-int existeClienteNIF(Cliente* inicio_clientes, int NIF)
+int existeClienteNIF(Cliente* inicioClientes, int NIF)
 {
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        if (inicio_clientes->NIF == NIF)
+        if (inicioClientes->NIF == NIF)
         {
             return 0;
         }
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        inicioClientes = inicioClientes->seguinteCliente;
     }
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
         return 1;
 }
 
 // Verifica cada cliente existente, se o seu codigo do elemento que está a verificar for maior que o elemento seguinte, irá ser feita uma troca
 // para ordenar todos os elementos da lista ligada por um valor crescente.
-Cliente* bubbleSortClientes(Cliente* inicio_clientes) {
+Cliente* bubbleSortClientes(Cliente* inicioClientes) {
     Cliente* atual, * seguinte;
-    int b = 1, aux_codigo, aux_NIF, aux_saldo;
-    char aux_nome[MAX_LEN], aux_geocodigo[MAX_LEN];
+    int b = 1, auxCodigo, auxNIF, auxSaldo;
+    char auxNome[MAX_LEN], auxGeocodigo[MAX_LEN];
     while (b)
     {
         b = 0;
-        atual = inicio_clientes;
+        atual = inicioClientes;
         if (atual == NULL)
         {
             return 0;
@@ -416,11 +427,11 @@ Cliente* bubbleSortClientes(Cliente* inicio_clientes) {
             seguinte = atual->seguinteCliente;
             if (atual->codigo > seguinte->codigo)
             {
-                aux_codigo = atual->codigo;
-                strcpy(aux_nome, atual->nome);
-                aux_NIF = atual->NIF;
-                aux_saldo = atual->saldo;
-                strcpy(aux_geocodigo, atual->geocodigo);
+                auxCodigo = atual->codigo;
+                strcpy(auxNome, atual->nome);
+                auxNIF = atual->NIF;
+                auxSaldo = atual->saldo;
+                strcpy(auxGeocodigo, atual->geocodigo);
 
                 atual->codigo = seguinte->codigo;
                 strcpy(atual->nome, seguinte->nome);
@@ -428,19 +439,19 @@ Cliente* bubbleSortClientes(Cliente* inicio_clientes) {
                 atual->saldo = seguinte->saldo;
                 strcpy(atual->geocodigo, seguinte->geocodigo);
 
-                seguinte->codigo = aux_codigo;
-                strcpy(seguinte->nome, aux_nome);
-                seguinte->NIF = aux_NIF;
-                seguinte->saldo = aux_saldo;
-                strcpy(seguinte->geocodigo, aux_geocodigo);
+                seguinte->codigo = auxCodigo;
+                strcpy(seguinte->nome, auxNome);
+                seguinte->NIF = auxNIF;
+                seguinte->saldo = auxSaldo;
+                strcpy(seguinte->geocodigo, auxGeocodigo);
 
                 b = 1;
             }
             atual = seguinte;
         }
     }
-    inicio_clientes = atual;
-    return inicio_clientes;
+    inicioClientes = atual;
+    return inicioClientes;
 }
 #pragma endregion
 
@@ -453,25 +464,27 @@ Cliente* bubbleSortClientes(Cliente* inicio_clientes) {
 
 // Ler ficheiro de texto, contendo informação sobre os gestores.
 // Serão todos os dados, inseridos numa lista ligada, que de inicio é vazia.
-Gestor* lerFicheiroGestores(Gestor* inicio_gestor, FILE* dados_gestor)
+Gestor* lerFicheiroGestores(Gestor* inicioGestor, char fileName[])
 {
+    FILE *dadosGestor = fopen("gestores.txt", "rt");
+
     char linha[MAX_LINE_LEN];
-    while (fgets(linha, MAX_LINE_LEN, dados_gestor))
+    while (fgets(linha, MAX_LINE_LEN, dadosGestor))
     {
-        Gestor* novo_nodo = malloc(sizeof(struct RegistoGestor));
-        sscanf(linha, "%d;%[^;];%[^;];%d;%s\n", &novo_nodo->codigo, novo_nodo->nome, novo_nodo->senha, &novo_nodo->encriptado, novo_nodo->area_responsavel);
-        novo_nodo->seguinteGestor = inicio_gestor;
-        inicio_gestor = novo_nodo;
+        Gestor* novoNodo = malloc(sizeof(struct RegistoGestor));
+        sscanf(linha, "%d;%[^;];%[^;];%d;%s\n", &novoNodo->codigo, novoNodo->nome, novoNodo->senha, &novoNodo->encriptado, novoNodo->areaResponsavel);
+        novoNodo->seguinteGestor = inicioGestor;
+        inicioGestor = novoNodo;
     }
-    fclose(dados_gestor);
-    return inicio_gestor;
+    fclose(dadosGestor);
+    return inicioGestor;
 }
 
 // Apresenta na consola toda a informação existente sobre os gestores.
-void listarGestores(Gestor* inicio_gestor)
+void listarGestores(Gestor* inicioGestor)
 {
     system("cls");
-    if (inicio_gestor == NULL)
+    if (inicioGestor == NULL)
     {
         printf("Nao existem gestores, por favor registe-se.\n");
         return 0;
@@ -479,10 +492,10 @@ void listarGestores(Gestor* inicio_gestor)
     else
     {
         printf("Dados de Gestores:\n------------------------------------------------------------------------------------------------------------------------\n");
-        while (inicio_gestor != NULL)
+        while (inicioGestor != NULL)
         {
-            printf("Codigo:%d        Nome:%s    Area:%s\n", inicio_gestor->codigo, inicio_gestor->nome, inicio_gestor->area_responsavel);
-            inicio_gestor = inicio_gestor->seguinteGestor;
+            printf("Codigo:%d        Nome:%s    Area:%s\n", inicioGestor->codigo, inicioGestor->nome, inicioGestor->areaResponsavel);
+            inicioGestor = inicioGestor->seguinteGestor;
         }
         printf("------------------------------------------------------------------------------------------------------------------------\n");
     }
@@ -490,73 +503,73 @@ void listarGestores(Gestor* inicio_gestor)
 }
 
 // Escreve todos os dados inseridos sobre os gestores, em ficheiro de texto.
-int escreverFicheiroGestores(Gestor* inicio_gestores, char fileName[])
+int escreverFicheiroGestores(Gestor* inicioGestores, char fileName[])
 {
-    if (inicio_gestores == NULL)
+    if (inicioGestores == NULL)
     {
         return -1;
     }
-    FILE *dados_gestores = fopen(fileName, "wt");
-    if (dados_gestores == NULL)
+    FILE *dadosGestores = fopen(fileName, "wt");
+    if (dadosGestores == NULL)
     {
         return -2;
     }
-    while (inicio_gestores != NULL)
+    while (inicioGestores != NULL)
     {
-        fprintf(dados_gestores, "%d;%s;%s;%d;%s\n", inicio_gestores->codigo, inicio_gestores->nome, inicio_gestores->senha, inicio_gestores->encriptado, inicio_gestores->area_responsavel);       
-        inicio_gestores = inicio_gestores->seguinteGestor;
+        fprintf(dadosGestores, "%d;%s;%s;%d;%s\n", inicioGestores->codigo, inicioGestores->nome, inicioGestores->senha, inicioGestores->encriptado, inicioGestores->areaResponsavel);       
+        inicioGestores = inicioGestores->seguinteGestor;
     }
 
-    fclose(dados_gestores);
+    fclose(dadosGestores);
     return 1;
 }
 
 // Escreve todos os dados inseridos sobre os gestores, em ficheiro binário.
-int escreverFicheiroGestoresBin(Gestor* inicio_gestores, char fileName[])
+int escreverFicheiroGestoresBin(Gestor* inicioGestores, char fileName[])
 {
-    if (inicio_gestores == NULL)
+    if (inicioGestores == NULL)
     {
         return -1;
     }
-    FILE *dados_gestores = fopen(fileName, "wb");
-    if (dados_gestores == NULL)
+    FILE *dadosGestores = fopen(fileName, "wb");
+    if (dadosGestores == NULL)
     {
         return -2;
     }
-    while (inicio_gestores != NULL)
+    while (inicioGestores != NULL)
     {
-        fwrite(inicio_gestores, 1, sizeof(Gestor), dados_gestores);
-        inicio_gestores = inicio_gestores->seguinteGestor;
+        fwrite(inicioGestores, 1, sizeof(Gestor), dadosGestores);
+        inicioGestores = inicioGestores->seguinteGestor;
     }
-    fclose(dados_gestores);
+    fclose(dadosGestores);
     return 1;
 }
 
 // Verifica, consoante o endereço de memória de um certo gestor, se o seu código é igual ao que foi inserido para um novo gestor.
-int existeGestor(Gestor* inicio_gestores, int cod)
+int existeGestor(Gestor* inicioGestores, int cod)
 {
-    while (inicio_gestores != NULL)
+    while (inicioGestores != NULL)
     {
-        if (inicio_gestores->codigo == cod)
+        if (inicioGestores->codigo == cod)
         {
             return 0;
         }
-        inicio_gestores = inicio_gestores->seguinteGestor;
+        inicioGestores = inicioGestores->seguinteGestor;
     }
-    if (inicio_gestores == NULL)
+    if (inicioGestores == NULL)
         return 1;
 }
 
 // Verifica cada gestor existente, se o seu codigo do elemento que está a verificar for maior que o elemento seguinte, irá ser feita uma troca
 // para ordenar todos os elementos da lista ligada por um valor crescente.
-Gestor* bubbleSortGestores(Gestor* inicio_gestor) {
+Gestor* bubbleSortGestores(Gestor* inicioGestor) {
     Gestor* atual, * seguinte;
-    int aux_codigo, b = 1, aux_encriptado;
-    char aux_senha[MAX_LEN], aux_nome[MAX_LEN], aux_area_responsavel[MAX_LEN];
+    int auxCodigo, b = 1, auxEncriptado;
+    char auxSenha[MAX_LEN], auxNome[MAX_LEN], auxAreaResponsavel[MAX_LEN];
     while (b)
     {
         b = 0;
-        atual = inicio_gestor;
+        atual = inicioGestor;
         if (atual == NULL)
         {
             return 0;
@@ -566,31 +579,31 @@ Gestor* bubbleSortGestores(Gestor* inicio_gestor) {
             seguinte = atual->seguinteGestor;
             if (atual->codigo > seguinte->codigo)
             {
-                aux_codigo = atual->codigo;
-                strcpy(aux_nome, atual->nome);
-                strcpy(aux_senha, atual->senha);
-                aux_encriptado = atual->encriptado;
-                strcpy(aux_area_responsavel, atual->area_responsavel);
+                auxCodigo = atual->codigo;
+                strcpy(auxNome, atual->nome);
+                strcpy(auxSenha, atual->senha);
+                auxEncriptado = atual->encriptado;
+                strcpy(auxAreaResponsavel, atual->areaResponsavel);
 
                 atual->codigo = seguinte->codigo;
                 strcpy(atual->nome, seguinte->nome);
                 strcpy(atual->senha, seguinte->senha);
                 atual->encriptado = seguinte->encriptado;
-                strcpy(atual->area_responsavel, seguinte->area_responsavel);
+                strcpy(atual->areaResponsavel, seguinte->areaResponsavel);
 
-                seguinte->codigo = aux_codigo;
-                strcpy(seguinte->nome, aux_nome);
-                strcpy(seguinte->senha, aux_senha);
-                seguinte->encriptado = aux_encriptado;
-                strcpy(seguinte->area_responsavel, aux_area_responsavel);
+                seguinte->codigo = auxCodigo;
+                strcpy(seguinte->nome, auxNome);
+                strcpy(seguinte->senha, auxSenha);
+                seguinte->encriptado = auxEncriptado;
+                strcpy(seguinte->areaResponsavel, auxAreaResponsavel);
 
                 b = 1;
             }
             atual = seguinte;
         }
     }
-    inicio_gestor = atual;
-    return inicio_gestor;
+    inicioGestor = atual;
+    return inicioGestor;
 }
 #pragma endregion
 
@@ -602,32 +615,32 @@ Gestor* bubbleSortGestores(Gestor* inicio_gestor) {
 
 // Função para entrar em modo gestor, no qual é pedido um codigo e uma senha. Caso sejam iguais ao que está no ficheiro é garantido o acesso
 // a funções de gestor.
-Gestor* modoGestor(Gestor* inicio_gestores) {
-    int codigo_inserido;
+Gestor* modoGestor(Gestor* inicioGestores) {
+    int codigoInserido;
     char senha[20];
-    if (inicio_gestores == NULL)
+    if (inicioGestores == NULL)
     {
         printf("Ficheiro nao lido.\n");
         return 0;
     }
     printf("Insira o codigo de utilizador: ");
-    scanf("%d", &codigo_inserido);
+    scanf("%d", &codigoInserido);
     printf("Insira a senha: ");
     scanf("%s", senha);
-    while (inicio_gestores != NULL)
+    while (inicioGestores != NULL)
     {
-        if (inicio_gestores->codigo == codigo_inserido && strcmp(inicio_gestores->senha, senha) == 0 && inicio_gestores->encriptado == 0)
+        if (inicioGestores->codigo == codigoInserido && strcmp(inicioGestores->senha, senha) == 0 && inicioGestores->encriptado == 0)
         {
-            printf("Bem-vindo %s\n", inicio_gestores->nome);
+            printf("Bem-vindo %s\n", inicioGestores->nome);
             return 1;
         }
-        else if (inicio_gestores->codigo == codigo_inserido && inicio_gestores->encriptado == 1)
+        else if (inicioGestores->codigo == codigoInserido && inicioGestores->encriptado == 1)
         {
-            decryptSenha(inicio_gestores, inicio_gestores->senha);
-            if (strcmp(senha, inicio_gestores->senha) == 0)
+            decryptSenha(inicioGestores, inicioGestores->senha);
+            if (strcmp(senha, inicioGestores->senha) == 0)
             {
-                printf("Bem-vindo %s\n", inicio_gestores->nome);
-                encryptSenha(inicio_gestores, inicio_gestores->senha);
+                printf("Bem-vindo %s\n", inicioGestores->nome);
+                encryptSenha(inicioGestores, inicioGestores->senha);
                 return 1;
             }
             else
@@ -638,203 +651,159 @@ Gestor* modoGestor(Gestor* inicio_gestores) {
         }
         else
         {
-            inicio_gestores = inicio_gestores->seguinteGestor;
+            inicioGestores = inicioGestores->seguinteGestor;
         }
     }
-    if (inicio_gestores == NULL)
+    if (inicioGestores == NULL)
     {
         printf("Codigo ou senha errados.\n");
         return 0;
     }
 }
 
-// Função para inserir um novo meio elétrico, é pedido ao gestor na função main, um novo codigo, nome, nivel bateria, autonomia, o seu custo 
-// e a sua geolocalização. De seguida é inserido no ultimo lugar da lista ligada dos meios, quando é o ultimo endereço NULL.
-Meio* inserirMeio(Grafo* inicio_grafo, Meio* inicio_meios, int cod, char nome[], float bat, float aut, int custo, char geo[])
+Meio* inserirMeio(Grafo* inicioGrafo, Meio* inicioMeios, Meio* meio)
 {
-    Grafo* aux = inicio_grafo;
-    int inserir = 0;
-    while (inserir != 1)
-    {
-        if (inicio_meios == NULL)
-        {
-            Meio* novo_meio = malloc(sizeof(Meio));
-            novo_meio->codigo = cod;
-            strcpy(novo_meio->tipo, nome);
-            novo_meio->bateria = bat;
-            novo_meio->autonomia = aut;
-            novo_meio->custo = custo;
-            strcpy(novo_meio->geocodigo, geo);
-            if (!existeVertice(aux, novo_meio->geocodigo))
-            {
-                inserirVertice(aux, novo_meio->geocodigo);
-            }
-            novo_meio->ativo = 0;
-            novo_meio->seguinteMeio = NULL;
-            inicio_meios = novo_meio;
-            printf("Meio com codigo %d inserido com sucesso.\n", novo_meio->codigo);
-            Sleep(2000);
-            system("cls");
-            return inicio_meios;
+    Meio* aux = inicioMeios;
+    Grafo* auxGrafo = inicioGrafo;
+
+    if (aux == NULL) {
+        return meio;
+    }
+    else {
+        // Percorre até o último cliente da lista
+        Meio* atual = aux;
+        while (atual->seguinteMeio != NULL) {
+            atual = atual->seguinteMeio;
         }
-        if (inicio_meios->seguinteMeio == NULL)
+        if (!existeVertice(auxGrafo, meio->geocodigo))
         {
-            Meio* novo_meio = malloc(sizeof(Meio));
-            novo_meio->codigo = cod;
-            strcpy(novo_meio->tipo, nome);
-            novo_meio->bateria = bat;
-            novo_meio->autonomia = aut;
-            novo_meio->custo = custo;
-            strcpy(novo_meio->geocodigo, geo);
-            if (!existeVertice(aux, novo_meio->geocodigo))
+            int auxVertice, escolhaAdjacente, inserido = 1;
+            auxVertice = inserirVertice(auxGrafo, meio->geocodigo);
+            if (auxVertice == 1)
             {
-                int auxVertice, escolhaAdjacente, inserido = 1;
-                auxVertice = inserirVertice(aux, novo_meio->geocodigo);
-                if (auxVertice == 1)
+                printf("A %s tem algum destino? 1-Sim/0-Nao\n", meio->geocodigo);
+                printf("A sua escolha: ");
+                scanf("%d", &escolhaAdjacente);
+                while (inserido != 0)
                 {
-                    printf("A %s tem algum destino? 1-Sim/0-Nao\n", novo_meio->geocodigo);
-                    printf("A sua escolha: ");
-                    scanf("%d", &escolhaAdjacente);
-                    while (escolhaAdjacente == 1 && inserido != 0)
+                    char novoAdjacente[50];
+                    float novoPeso;
+                    printf("Nome do novo adjacente a %s: ", meio->geocodigo);
+                    scanf("%s", novoAdjacente);
+                    printf("Distancia em km: ");
+                    scanf("%f", &novoPeso);
+                    if (inserirAdjacente(auxGrafo, meio->geocodigo, novoAdjacente, novoPeso))
                     {
-                        char novoAdjacente[50];
-                        float novoPeso;
-                        printf("Nome do novo adjacente a %s: ", novo_meio->geocodigo);
-                        scanf("%s", novoAdjacente);
-                        printf("Distancia em km: ");
-                        scanf("%f", &novoPeso);
-                        if (inserirAdjacente(aux, novo_meio->geocodigo, novoAdjacente, novoPeso))
-                        {
-                            printf("Adjacente inserido com sucesso.\n");
-                            printf("Deseja inserir mais adjacentes ao geocodigo %s?\n 1-Sim/0-Nao\n", novo_meio->geocodigo);
-                            printf("A sua escolha: ");
-                            scanf("%d", &inserido);
-                        }
+                        printf("Adjacente inserido com sucesso.\n");
+                        printf("Deseja inserir mais adjacentes ao geocodigo %s?\n 1-Sim/0-Nao\n", meio->geocodigo);
+                        printf("A sua escolha: ");
+                        scanf("%d", &inserido);
                     }
                 }
             }
-            novo_meio->ativo = 0;
-            inicio_meios->seguinteMeio = novo_meio;
-            novo_meio->seguinteMeio = NULL;
-            inicio_meios = novo_meio;
-            inserir = 1;
-            printf("Meio com codigo %d inserido com sucesso.\n", novo_meio->codigo);
-            Sleep(2000);
-            system("cls");
-            return inicio_meios;
         }
-        inicio_meios = inicio_meios->seguinteMeio;
+        // Insere o novo meio no final
+        atual->seguinteMeio = meio;
     }
-    return inicio_meios;
+
+    return aux;
+}
+
+// Função para inserir um novo meio elétrico, é pedido ao gestor na função main, um novo codigo, nome, nivel bateria, autonomia, o seu custo 
+// e a sua geolocalização. De seguida é inserido no ultimo lugar da lista ligada dos meios, quando é o ultimo endereço NULL.
+Meio* criarMeio(Grafo* inicioGrafo, Meio* inicioMeios, int cod, char nome[], float bat, float aut, int custo, char geo[])
+{
+    Grafo* aux = inicioGrafo;
+
+        Meio* novoMeio = malloc(sizeof(Meio));
+        novoMeio->codigo = cod;
+        strcpy(novoMeio->tipo, nome);
+        novoMeio->bateria = bat;
+        novoMeio->autonomia = aut;
+        novoMeio->custo = custo;
+        strcpy(novoMeio->geocodigo, geo);
+        if (!existeVertice(aux, novoMeio->geocodigo))
+        {
+            inserirVertice(aux, novoMeio->geocodigo);
+        }
+        novoMeio->ativo = 0;
+        novoMeio->seguinteMeio = NULL;
+
+    return novoMeio;
 }
 
 // Função para inserir um novo cliente, é pedido ao gestor na função main, um novo codigo, nome, NIF e saldo.  
 // De seguida é inserido no ultimo lugar da lista ligada dos clientes, quando é o ultimo endereço NULL.
-Cliente* inserirCliente(Cliente* inicio_clientes, int cod, char nome[], int NIF, int saldo, char geocodigo[])
+Cliente* criarCliente(int cod, char nome[], int NIF, int saldo, char geocodigo[])
 {
-    int inserir = 0;
-    while (inserir != 1)
-    {
-        if (inicio_clientes == NULL)
-        {
-            Cliente* novo_cliente = malloc(sizeof(Cliente));
-            novo_cliente->codigo = cod;
-            strcpy(novo_cliente->nome, nome);
-            novo_cliente->NIF = NIF;
-            novo_cliente->saldo = saldo;
-            strcpy(novo_cliente->geocodigo, geocodigo);
-            novo_cliente->seguinteCliente = NULL;
-            inicio_clientes = novo_cliente;
-            return inicio_clientes;
-        }
-        if (inicio_clientes->seguinteCliente == NULL)
-        {
-            Cliente* novo_cliente = malloc(sizeof(Cliente));
-            novo_cliente->codigo = cod;
-            strcpy(novo_cliente->nome, nome);
-            novo_cliente->NIF = NIF;
-            novo_cliente->saldo = saldo;
-            strcpy(novo_cliente->geocodigo, geocodigo);
-            inicio_clientes->seguinteCliente = novo_cliente;
-            novo_cliente->seguinteCliente = NULL;
-            inicio_clientes = novo_cliente;
-            return inicio_clientes;
-        }
-       
-        
-        inicio_clientes = inicio_clientes->seguinteCliente;
+    Cliente* novoCliente = malloc(sizeof(Cliente));
+    novoCliente->codigo = cod;
+    strcpy(novoCliente->nome, nome);
+    novoCliente->NIF = NIF;
+    novoCliente->saldo = saldo;
+    strcpy(novoCliente->geocodigo, geocodigo);
+    novoCliente->seguinteCliente = NULL;
+
+    return novoCliente;
+}
+
+Cliente* inserirCliente(Cliente* inicioClientes, Cliente* cliente)
+{
+    Cliente* aux = inicioClientes;
+
+    if (aux == NULL) {
+        return cliente;
     }
-    return inicio_clientes;
+    else {
+        // Percorre até o último cliente da lista
+        Cliente* atual = aux;
+        while (atual->seguinteCliente != NULL) {
+            atual = atual->seguinteCliente;
+        }
+        // Insere o novo cliente no final
+        atual->seguinteCliente = cliente;
+    }
+
+    return aux;
 }
 
 // Função para inserir um novo gestor, é pedido ao gestor na função main, um novo codigo, nome e senha.  
 // De seguida é inserido no ultimo lugar da lista ligada dos gestores, quando é o ultimo endereço NULL.
-Gestor* inserirGestor(Gestor* inicio_gestor, int cod, char nome[], char senha[], char area[])
+Gestor* inserirGestor(Gestor* inicioGestor, Gestor* gestor)
 {
-    int inserir = 0, encriptado;
-    while (inserir != 1)
-    {
-        if (inicio_gestor == NULL)
-        {
-            Gestor* novo_gestor = malloc(sizeof(Gestor));
-            novo_gestor->codigo = cod;
-            strcpy(novo_gestor->nome, nome);
-            strcpy(novo_gestor->senha, senha);
-            printf("Deseja encriptar a sua senha?\n1-Sim/2-Nao\n");
-            printf("A sua escolha: ");
-            scanf("%d", &encriptado);
-            if (encriptado == 1)
-            {
-                novo_gestor->encriptado = 1;
-                encryptSenha(novo_gestor, novo_gestor->senha);
-            }
-            else
-            {
-                novo_gestor->encriptado = 0;
-            }
-            strcpy(novo_gestor->area_responsavel, area);
-            novo_gestor->seguinteGestor = NULL;
-            inicio_gestor = novo_gestor;
-            printf("Gestor com codigo %d inserido com sucesso.\n", novo_gestor->codigo);
-            Sleep(2000);
-            system("cls");
-            return inicio_gestor;
-        }
-        if (inicio_gestor->seguinteGestor == NULL)
-        {
-            Gestor* novo_gestor = malloc(sizeof(Gestor));
-            novo_gestor->codigo = cod;
-            strcpy(novo_gestor->nome, nome);
-            strcpy(novo_gestor->senha, senha);
-            printf("Deseja encriptar a sua senha?\n1-Sim/2-Nao\n");
-            printf("A sua escolha: ");
-            scanf("%d", &encriptado);
-            if (encriptado == 1)
-            {
-                novo_gestor->encriptado = 1;
-                encryptSenha(novo_gestor, novo_gestor->senha);
-            }
-            else
-            {
-                novo_gestor->encriptado = 0;
-            }
-            strcpy(novo_gestor->area_responsavel, area);
-            inicio_gestor->seguinteGestor = novo_gestor;
-            novo_gestor->seguinteGestor = NULL;
-            inicio_gestor = novo_gestor;
-            inserir = 1;
-            printf("Gestor com codigo %d inserido com sucesso.\n", novo_gestor->codigo);
-            Sleep(2000);
-            system("cls");
-            return inicio_gestor;
-        }
-        inicio_gestor = inicio_gestor->seguinteGestor;
+    Gestor* aux = inicioGestor;
+
+    if (aux == NULL) {
+        return gestor;
     }
-    return inicio_gestor;
+    else {
+        // Percorre até o último gestor da lista
+        Gestor* atual = aux;
+        while (atual->seguinteGestor != NULL) {
+            atual = atual->seguinteGestor;
+        }
+        // Insere o novo gestor no final
+        atual->seguinteGestor = gestor;
+    }
+
+    return aux;
+}
+
+Gestor* criarGestor(Gestor* inicioGestor, int cod, char nome[], char senha[], char area[])
+{
+    Gestor* gestor = malloc(sizeof(Gestor));
+    gestor->codigo = cod;
+    strcpy(gestor->nome, nome);
+    strcpy(gestor->senha, senha);
+    strcpy(gestor->areaResponsavel, area);
+    gestor->encriptado = 1;
+    encryptSenha(gestor, gestor->senha);
+    gestor->seguinteGestor = NULL;
+    return gestor;
 }
 
 // Pequena função para encriptação da senha do gestor.
-int encryptSenha(Gestor* inicio_gestor, char senha[])
+int encryptSenha(Gestor* inicioGestor, char senha[])
 {
     for (int i = 0; i < strlen(senha); i++)
     {
@@ -844,7 +813,7 @@ int encryptSenha(Gestor* inicio_gestor, char senha[])
 }
 
 // Pequena função para desencriptação da senha do gestor.
-int decryptSenha(Gestor* inicio_gestor, char senha[])
+int decryptSenha(Gestor* inicioGestor, char senha[])
 {
     for (int i = 0; i < strlen(senha); i++)
     {
@@ -858,9 +827,9 @@ int decryptSenha(Gestor* inicio_gestor, char senha[])
 
 // Função para remover algum meio, a partir do código inserido pelo gestor. É removido o meio e de seguida é retornada toda a lista ligada
 // com o meio removido.
-Meio* removerMeio(Meio* inicio_meios, int cod)
+Meio* removerMeio(Meio* inicioMeios, int cod)
 {
-    Meio* anterior = inicio_meios, * atual = inicio_meios, * aux;
+    Meio* anterior = inicioMeios, * atual = inicioMeios, * aux;
 
     if (atual == NULL) return(NULL); // Lista vazia.
     else if (atual->codigo == cod) // remoção do 1º registo
@@ -879,7 +848,7 @@ Meio* removerMeio(Meio* inicio_meios, int cod)
             anterior = atual;
             atual = atual->seguinteMeio;
         }
-        if (atual == NULL) return(inicio_meios);
+        if (atual == NULL) return(inicioMeios);
         else // Remoção do meio com cod introduzido.
         {
             anterior->seguinteMeio = atual->seguinteMeio;
@@ -887,16 +856,16 @@ Meio* removerMeio(Meio* inicio_meios, int cod)
             printf("Meio com cod %d removido com sucesso.\n", cod);
             Sleep(2000);
             system("cls");
-            return(inicio_meios);
+            return(inicioMeios);
         }
     }
 }
 
 // Função para remover algum cliente, a partir do código inserido pelo gestor. É removido o cliente e de seguida é retornada toda a lista ligada
 // com o meio removido.
-Cliente* removerCliente(Cliente* inicio_clientes, int cod)
+Cliente* removerCliente(Cliente* inicioClientes, int cod)
 {
-    Cliente* anterior = inicio_clientes, * atual = inicio_clientes, * aux;
+    Cliente* anterior = inicioClientes, * atual = inicioClientes, * aux;
 
     if (atual == NULL) return(NULL); // Lista vazia.
     else if (atual->codigo == cod) // remoção do 1º registo
@@ -915,7 +884,7 @@ Cliente* removerCliente(Cliente* inicio_clientes, int cod)
             anterior = atual;
             atual = atual->seguinteCliente;
         }
-        if (atual == NULL) return(inicio_clientes);
+        if (atual == NULL) return(inicioClientes);
         else // Remoção do cliente com cod introduzido.
         {
             anterior->seguinteCliente = atual->seguinteCliente;
@@ -923,16 +892,16 @@ Cliente* removerCliente(Cliente* inicio_clientes, int cod)
             printf("Cliente com cod %d removido com sucesso.\n", cod);
             Sleep(2000);
             system("cls");
-            return(inicio_clientes);
+            return(inicioClientes);
         }
     }
 }
 
 // Função para remover algum gestor, a partir do código inserido pelo gestor. É removido o gestor e de seguida é retornada toda a lista ligada
 // com o meio removido.
-Gestor* removerGestor(Gestor* inicio_gestores, int cod)
+Gestor* removerGestor(Gestor* inicioGestores, int cod)
 {
-    Gestor* anterior = inicio_gestores, * atual = inicio_gestores, * aux;
+    Gestor* anterior = inicioGestores, * atual = inicioGestores, * aux;
 
     if (atual == NULL) return(NULL); // Lista vazia.
     else if (atual->codigo == cod) // remoção do 1º registo
@@ -949,13 +918,13 @@ Gestor* removerGestor(Gestor* inicio_gestores, int cod)
             anterior = atual;
             atual = atual->seguinteGestor;
         }
-        if (atual == NULL) return(inicio_gestores); // Lista ligada toda percorrida, nao foi encontrado nenhum gestor com o codigo inserido.
+        if (atual == NULL) return(inicioGestores); // Lista ligada toda percorrida, nao foi encontrado nenhum gestor com o codigo inserido.
         else // Remoção do gestor com cod introduzido.
         {
             anterior->seguinteGestor = atual->seguinteGestor;
             free(atual);
             printf("Gestor com cod %d removido com sucesso.\n", cod);
-            return(inicio_gestores);
+            return(inicioGestores);
         }
     }
 }
@@ -965,12 +934,12 @@ Gestor* removerGestor(Gestor* inicio_gestores, int cod)
 
 // Função para alteração de dados de algum gestor.
 // Apenas é pedido o codigo de gestor. É possivel alterar codigo, nome, senha, area responsavel.
-Gestor* alterarGestor(Gestor* inicio_gestores)
+Gestor* alterarGestor(Gestor* inicioGestores)
 {
-    int cod, escolha, novo_cod, encriptar, acabadoAlterar = 1;
-    char nova_senha[50], novo_nome[50], senha[50], nova_area_responsavel[50];
-    Gestor* aux = inicio_gestores;
-    if (inicio_gestores == NULL)
+    int cod, escolha, novoCod, encriptar, acabadoAlterar = 1;
+    char novaSenha[50], novoNome[50], senha[50], novaAreaResponsavel[50];
+    Gestor* aux = inicioGestores;
+    if (inicioGestores == NULL)
     {
         printf("Nao existem gestores, por favor faca o registo de um.\n");
         Sleep(2000);
@@ -987,15 +956,15 @@ Gestor* alterarGestor(Gestor* inicio_gestores)
         return 0;
     }
     system("cls");
-    while (inicio_gestores != NULL)
+    while (inicioGestores != NULL)
     {
-        if (inicio_gestores->codigo == cod)
+        if (inicioGestores->codigo == cod)
         {
             do
             {
                 printf("Este sao os seus dados.\n");
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
-                printf("Nome:%s     Codigo:%d       Area:%s\n", inicio_gestores->nome, inicio_gestores->codigo, inicio_gestores->area_responsavel);
+                printf("Nome:%s     Codigo:%d       Area:%s\n", inicioGestores->nome, inicioGestores->codigo, inicioGestores->areaResponsavel);
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
                 printf("O que deseja alterar?\n");
                 printf("1 - Codigo.\n");
@@ -1009,8 +978,8 @@ Gestor* alterarGestor(Gestor* inicio_gestores)
                 {
                 case 1:
                     printf("Introduza um novo codigo: ");
-                    scanf("%d", &novo_cod);
-                    if (!existeGestor(aux, novo_cod))
+                    scanf("%d", &novoCod);
+                    if (!existeGestor(aux, novoCod))
                     {
                         printf("Ja existe alguem com esse codigo.\n");
                         Sleep(2000);
@@ -1018,31 +987,31 @@ Gestor* alterarGestor(Gestor* inicio_gestores)
                     }
                     else
                     {
-                        inicio_gestores->codigo = novo_cod;
-                        printf("Codigo alterado com sucesso. O seu novo codigo %d\n", inicio_gestores->codigo);
+                        inicioGestores->codigo = novoCod;
+                        printf("Codigo alterado com sucesso. O seu novo codigo %d\n", inicioGestores->codigo);
                         Sleep(2000);
                         system("cls");
                     }
                     break;
                 case 2:
                     printf("Introduza um novo nome: ");
-                    scanf("%s", novo_nome);
-                    strcpy(inicio_gestores->nome, novo_nome);
+                    scanf("%s", novoNome);
+                    strcpy(inicioGestores->nome, novoNome);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 3:
                     printf("Introduza a nova area para ser responsavel: ");
-                    scanf("%s", nova_area_responsavel);
-                    strcpy(inicio_gestores->area_responsavel, nova_area_responsavel);
+                    scanf("%s", novaAreaResponsavel);
+                    strcpy(inicioGestores->areaResponsavel, novaAreaResponsavel);
                     printf("A sua area responsavel foi alterada com sucesso.\n");
-                    printf("A sua nova area e a seguinte: %s\n", inicio_gestores->area_responsavel);
+                    printf("A sua nova area e a seguinte: %s\n", inicioGestores->areaResponsavel);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 4:
                     printf("Introduza a sua nova senha: ");
-                    scanf("%s", nova_senha);
+                    scanf("%s", novaSenha);
                     printf("Deseja encriptar? 1-Sim/0-Nao\n");
                     printf("A sua escolha: ");
                     scanf("%d", &encriptar);
@@ -1055,9 +1024,9 @@ Gestor* alterarGestor(Gestor* inicio_gestores)
                     }
                     else
                     {
-                        inicio_gestores->encriptado = 1;
-                        encryptSenha(inicio_gestores, nova_senha);
-                        strcpy(inicio_gestores->senha, nova_senha);
+                        inicioGestores->encriptado = 1;
+                        encryptSenha(inicioGestores, novaSenha);
+                        strcpy(inicioGestores->senha, novaSenha);
                         printf("Senha encriptada e alterada com sucesso.\n");
                         Sleep(2000);
                         system("cls");
@@ -1071,22 +1040,19 @@ Gestor* alterarGestor(Gestor* inicio_gestores)
                 }
             } while (escolha != 0);
         }
-        inicio_gestores = inicio_gestores->seguinteGestor;
+        inicioGestores = inicioGestores->seguinteGestor;
     }
 }
 
 // Função para alteração de dados do cliente.
 // É pedido o codigo e o NIF, caso coincidam com algum dos utilizadores existentes é possivel fazer alteração de nome, codigo e NIF.
-ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_transacao) {
-    int codigo, NIF, novo_codigo, novo_NIF, inserir = 1, escolha, codigoAux;
-    char novo_nome[50], novo_geocodigo[100];
-    Cliente* aux = inicio_clientes;
-    Transacao* auxTrans = inicio_transacao;
-    if (inicio_clientes == NULL)
+ResFuncoes alterarDadosCliente(Cliente* inicioClientes, Transacao* inicioTransacao) {
+    int codigo, NIF, novoCodigo, novoNIF, inserir = 1, escolha, codigoAux;
+    char novoNome[50], novoGeocodigo[100];
+    Cliente* aux = inicioClientes;
+    Transacao* auxTrans = inicioTransacao;
+    if (inicioClientes == NULL)
     {
-        /* printf("Nao existem clientes.\n");
-         Sleep(2000);
-         system("cls");*/
         return CLIENTES_NAO_EXISTEM;
     }
     printf("Introduza o seu codigo: ");
@@ -1099,20 +1065,17 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
     }
     else if (existeClienteNIF(aux, NIF) == 1)
     {
-        /*printf("O codigo %d, nao esta registado com o NIF %d.\n", codigo, NIF);
-        Sleep(2000);
-        system("cls");*/
         return NIF_CLIENTE_NAO_EXISTE;
     }
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        if (inicio_clientes->codigo == codigo && inicio_clientes->NIF == NIF)
+        if (inicioClientes->codigo == codigo && inicioClientes->NIF == NIF)
         {
             do
             {
-                printf("Este sao os seus dados, %s.\n", inicio_clientes->nome);
+                printf("Este sao os seus dados, %s.\n", inicioClientes->nome);
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
-                printf("Nome:%s     Codigo:%d       NIF:%d      Localizacao:%s\n", inicio_clientes->nome, inicio_clientes->codigo, inicio_clientes->NIF, inicio_clientes->geocodigo);
+                printf("Nome: %s     Codigo: %d       NIF: %d      Localizacao: %s\n", inicioClientes->nome, inicioClientes->codigo, inicioClientes->NIF, inicioClientes->geocodigo);
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
                 printf("O que deseja alterar?\n");
                 printf("1 - Nome.\n");
@@ -1127,27 +1090,27 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                 case 1:
                     getchar();
                     printf("Insira o seu novo nome: ");
-                    scanf("%[^\n]", novo_nome);
-                    strcpy(inicio_clientes->nome, novo_nome);
-                    printf("Nome alterado com sucesso para %s.\n", inicio_clientes->nome);
+                    scanf("%[^\n]", novoNome);
+                    strcpy(inicioClientes->nome, novoNome);
+                    printf("Nome alterado com sucesso para %s.\n", inicioClientes->nome);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 2:
                     printf("Insira o seu novo codigo: ");
-                    scanf("%d", &novo_codigo);
-                    if (existeClienteCod(aux, novo_codigo))
+                    scanf("%d", &novoCodigo);
+                    if (existeClienteCod(aux, novoCodigo))
                     {
-                        codigoAux = inicio_clientes->codigo;
-                        inicio_clientes->codigo = novo_codigo;
-                        printf("O seu novo codigo %d\n", inicio_clientes->codigo);
+                        codigoAux = inicioClientes->codigo;
+                        inicioClientes->codigo = novoCodigo;
+                        printf("O seu novo codigo %d\n", inicioClientes->codigo);
                         if (existeClienteTransacao(auxTrans, codigoAux))
                         {
                             while (auxTrans != NULL)
                             {
-                                if (auxTrans->codigo_utilizador == codigoAux)
+                                if (auxTrans->codigoUtilizador == codigoAux)
                                 {
-                                    auxTrans->codigo_utilizador = novo_codigo;
+                                    auxTrans->codigoUtilizador = novoCodigo;
                                 }
                                 auxTrans = auxTrans->seguinteTransacao;
                             }
@@ -1157,7 +1120,7 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                     }
                     else
                     {
-                        printf("O codigo %d ja existe.\n", novo_codigo);
+                        printf("O codigo %d ja existe.\n", novoCodigo);
                         Sleep(2000);
                         system("cls");
                         break;
@@ -1165,8 +1128,8 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                     break;
                 case 3:
                     printf("Insira o seu novo NIF(deve conter 9 numeros e comecar por 192): ");
-                    scanf("%d", &novo_NIF);
-                    if (novo_NIF <= 192000000 || novo_NIF >= 193000000)
+                    scanf("%d", &novoNIF);
+                    if (novoNIF <= 192000000 || novoNIF >= 193000000)
                     {
                         printf("Por favor tente de novo.\n");
                         Sleep(2000);
@@ -1175,17 +1138,17 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                     }
                     else
                     {
-                        if (existeClienteNIF(aux, novo_NIF))
+                        if (existeClienteNIF(aux, novoNIF))
                         {
-                            inicio_clientes->NIF = novo_NIF;
-                            printf("O seu novo NIF %d\n", inicio_clientes->NIF);
+                            inicioClientes->NIF = novoNIF;
+                            printf("O seu novo NIF %d\n", inicioClientes->NIF);
                             Sleep(2000);
                             system("cls");
                             break;
                         }
                         else
                         {
-                            printf("Ja existe alguem com o NIF inserido %d.\n", novo_NIF);
+                            printf("Ja existe alguem com o NIF inserido %d.\n", novoNIF);
                             Sleep(2000);
                             system("cls");
                             break;
@@ -1194,9 +1157,9 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                     break;
                 case 4:
                     printf("Insira o seu novo geocodigo/localizacao: ");
-                    scanf("%s", novo_geocodigo);
-                    strcpy(inicio_clientes->geocodigo, novo_geocodigo);
-                    printf("Geocodigo alterado com sucesso para %s.\n", inicio_clientes->geocodigo);
+                    scanf("%s", novoGeocodigo);
+                    strcpy(inicioClientes->geocodigo, novoGeocodigo);
+                    printf("Geocodigo alterado com sucesso para %s.\n", inicioClientes->geocodigo);
                     Sleep(2000);
                     system("cls");
                     break;
@@ -1206,19 +1169,19 @@ ResFuncoes alterarDadosCliente(Cliente* inicio_clientes, Transacao* inicio_trans
                 }
             } while (escolha != 0);
         }
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        inicioClientes = inicioClientes->seguinteCliente;
     }
 }
 
 // Função para alteração de dados de algum meio.
 // É pedido o codigo do meio a alterar. É possivel alterar o seu codigo, tipo, se está ativo, custo, bat, aut, etc...
-Meio* alterarMeio(Meio* inicio_meios)
+Meio* alterarMeio(Meio* inicioMeios)
 {
-    int cod, cod_alterar, ativo_alterar, custo_alterar, escolha;
-    float bat_alterar, aut_alterar;
-    char meio_nome_alterar[50], geocodigo_alterar[50];
-    Meio* aux = inicio_meios;
-    if (inicio_meios == NULL)
+    int cod, codAlterar, ativoAlterar, custoAlterar, escolha;
+    float batAlterar, autAlterar;
+    char meioNomeAlterar[50], geocodigoAlterar[50];
+    Meio* aux = inicioMeios;
+    if (inicioMeios == NULL)
     {
         printf("Nao existem meios.\n");
         Sleep(2000);
@@ -1227,7 +1190,7 @@ Meio* alterarMeio(Meio* inicio_meios)
     }
     printf("Introduza o codigo do meio que pretende alterar: ");
     scanf("%d", &cod);
-    if (existeMeio(inicio_meios, cod))
+    if (existeMeio(inicioMeios, cod))
     {
         printf("O meio com o codigo %d nao existe.\n", cod);
         Sleep(2000);
@@ -1235,15 +1198,15 @@ Meio* alterarMeio(Meio* inicio_meios)
         return 0;
     }
     system("cls");
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        if (inicio_meios->codigo == cod)
+        if (inicioMeios->codigo == cod)
         {
             do
             {
-                printf("Este sao os dados do meio cod %d.\n", inicio_meios->codigo);
+                printf("Este sao os dados do meio cod %d.\n", inicioMeios->codigo);
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
-                printf("Codigo:%d\nTipo:%s\nBateria:%.2f\nAut:%.2f\nCusto:%d\nGeo:%s\nAtivo:%d\n", inicio_meios->codigo, inicio_meios->tipo, inicio_meios->bateria, inicio_meios->autonomia, inicio_meios->custo, inicio_meios->geocodigo, inicio_meios->ativo);
+                printf("Codigo:%d\nTipo:%s\nBateria:%.2f\nAut:%.2f\nCusto:%d\nGeo:%s\nAtivo:%d\n", inicioMeios->codigo, inicioMeios->tipo, inicioMeios->bateria, inicioMeios->autonomia, inicioMeios->custo, inicioMeios->geocodigo, inicioMeios->ativo);
                 printf("------------------------------------------------------------------------------------------------------------------------\n");
                 printf("O que deseja alterar?\n");
                 printf("1 - Codigo.\n");
@@ -1259,8 +1222,8 @@ Meio* alterarMeio(Meio* inicio_meios)
                 {
                 case 1:
                     printf("Insira o novo codigo: ");
-                    scanf("%d", &cod_alterar);
-                    if (!existeMeio(aux, cod_alterar))
+                    scanf("%d", &codAlterar);
+                    if (!existeMeio(aux, codAlterar))
                     {
                         printf("Ja existe um meio com esse codigo.\n");
                         Sleep(2000);
@@ -1268,73 +1231,73 @@ Meio* alterarMeio(Meio* inicio_meios)
                     }
                     else
                     {
-                        inicio_meios->codigo = cod_alterar;
-                        printf("Codigo alterado com sucesso. Novo codigo %d.\n", inicio_meios->codigo);
+                        inicioMeios->codigo = codAlterar;
+                        printf("Codigo alterado com sucesso. Novo codigo %d.\n", inicioMeios->codigo);
                         Sleep(2000);
                         system("cls");
                     }
                     break;
                 case 2:
                     printf("Insira o novo tipo de meio: ");
-                    scanf("%s", meio_nome_alterar);
-                    strcpy(inicio_meios->tipo, meio_nome_alterar);
-                    printf("Nome alterado com sucesso para %s.\n", inicio_meios->tipo);
+                    scanf("%s", meioNomeAlterar);
+                    strcpy(inicioMeios->tipo, meioNomeAlterar);
+                    printf("Nome alterado com sucesso para %s.\n", inicioMeios->tipo);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 3:
                     printf("Insira o novo nivel de bateria: ");
-                    scanf("%f", &bat_alterar);
-                    if (bat_alterar > 100.0001 || bat_alterar < 0)
+                    scanf("%f", &batAlterar);
+                    if (batAlterar > 100.0001 || batAlterar < 0)
                     {
                         printf("Insira um nivel de bateria, entre 0 e 100.\n");
                         Sleep(2000);
                         system("cls");
                         break;
                     }
-                    inicio_meios->bateria = bat_alterar;
-                    printf("Novo nivel de bateria %.2f\n", inicio_meios->bateria);
+                    inicioMeios->bateria = batAlterar;
+                    printf("Novo nivel de bateria %.2f\n", inicioMeios->bateria);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 4:
                     printf("Insira o novo nivel de autonomia: ");
-                    scanf("%f", &aut_alterar);
-                    if (aut_alterar > 100.0001 || aut_alterar < 0)
+                    scanf("%f", &autAlterar);
+                    if (autAlterar > 100.0001 || autAlterar < 0)
                     {
                         printf("Insira um nivel de autonomia, entre 0 e 100.\n");
                         Sleep(2000);
                         system("cls");
                         break;
                     }
-                    inicio_meios->autonomia = aut_alterar;
-                    printf("Novo nivel de autonomia %.2f\n", inicio_meios->autonomia);
+                    inicioMeios->autonomia = autAlterar;
+                    printf("Novo nivel de autonomia %.2f\n", inicioMeios->autonomia);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 5:
                     printf("Insira o novo custo: ");
-                    scanf("%d", &custo_alterar);
-                    inicio_meios->custo = custo_alterar;
-                    printf("Novo custo do meio %d\n", inicio_meios->custo);
+                    scanf("%d", &custoAlterar);
+                    inicioMeios->custo = custoAlterar;
+                    printf("Novo custo do meio %d\n", inicioMeios->custo);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 6:
                     printf("Insira um novo geocodigo: ");
-                    scanf("%s", geocodigo_alterar);
-                    strcpy(inicio_meios->geocodigo, geocodigo_alterar);
-                    printf("Novo geocodigo %s\n", inicio_meios->geocodigo);
+                    scanf("%s", geocodigoAlterar);
+                    strcpy(inicioMeios->geocodigo, geocodigoAlterar);
+                    printf("Novo geocodigo %s\n", inicioMeios->geocodigo);
                     Sleep(2000);
                     system("cls");
                     break;
                 case 7:
                     printf("Este veiculo esta ativo?1-Sim/0-Nao\n");
                     printf("A sua escolha: ");
-                    scanf("%d", &ativo_alterar);
-                    if (ativo_alterar == 1)
+                    scanf("%d", &ativoAlterar);
+                    if (ativoAlterar == 1)
                     {
-                        if (inicio_meios->ativo == 1)
+                        if (inicioMeios->ativo == 1)
                         {
                             printf("Meio ja esta ativo.\n");
                             Sleep(2000);
@@ -1342,13 +1305,13 @@ Meio* alterarMeio(Meio* inicio_meios)
                         }
                         else
                         {
-                            inicio_meios->ativo = 1;
+                            inicioMeios->ativo = 1;
                             system("cls");
                         }
                     }
                     else
                     {
-                        if (inicio_meios->ativo == 0)
+                        if (inicioMeios->ativo == 0)
                         {
                             printf("Meio ja nao estava ativo.\n");
                             Sleep(2000);
@@ -1356,7 +1319,7 @@ Meio* alterarMeio(Meio* inicio_meios)
                         }
                         else
                         {
-                            inicio_meios->ativo = 0;
+                            inicioMeios->ativo = 0;
 
                         }
                     }
@@ -1369,7 +1332,7 @@ Meio* alterarMeio(Meio* inicio_meios)
                 }
             } while (escolha != 0);
         }
-        inicio_meios = inicio_meios->seguinteMeio;
+        inicioMeios = inicioMeios->seguinteMeio;
     }
 }
 #pragma endregion
@@ -1380,54 +1343,54 @@ Meio* alterarMeio(Meio* inicio_meios)
 #pragma region OP_Utilizador
 // Função para carregamento de saldo, de um certo utilizador.
 // É pedido o codigo e o NIF, caso coincidam com algum dos utilizadores existentes é possivel carregar o saldo desse mesmo utilizador.
-Cliente* carregarSaldo(Cliente* inicio_clientes, Transacao* inicio_transacao) {
-    if (inicio_clientes == NULL)
+Cliente* carregarSaldo(Cliente* inicioClientes, Transacao* inicioTransacao) {
+    if (inicioClientes == NULL)
     {
         return CLIENTES_NAO_EXISTEM;
     }
-    Transacao* auxTrans = inicio_transacao;
+    Transacao* auxTrans = inicioTransacao;
     int codigo, NIF, inserir = 1;
     printf("Introduza o seu codigo: ");
     scanf("%d", &codigo);
     printf("Introduza o seu NIF: ");
     scanf("%d", &NIF);
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        if (inicio_clientes->codigo == codigo && inicio_clientes->NIF == NIF)
+        if (inicioClientes->codigo == codigo && inicioClientes->NIF == NIF)
         {
-            int saldo_carregar;
-            printf("O seu saldo: %d\n", inicio_clientes->saldo);
+            int saldoCarregar;
+            printf("O seu saldo: %d\n", inicioClientes->saldo);
             printf("Quanto saldo deseja carregar?\n");
             printf("Digite: ");
-            scanf("%d", &saldo_carregar);
-            if (saldo_carregar < 0)
+            scanf("%d", &saldoCarregar);
+            if (saldoCarregar < 0)
             {
                 return SALDO_CARR_NEGATIVO;
             }
-            inicio_clientes->saldo = saldo_carregar + inicio_clientes->saldo;
-            printf("%d carregado com sucesso. Tem agora %d de saldo.\n", saldo_carregar, inicio_clientes->saldo);
-            if (inicio_transacao == NULL)
+            inicioClientes->saldo = saldoCarregar + inicioClientes->saldo;
+            printf("%d carregado com sucesso. Tem agora %d de saldo.\n", saldoCarregar, inicioClientes->saldo);
+            if (inicioTransacao == NULL)
             {
-                if (inicio_transacao = criarTransacao(inicio_transacao, inicio_clientes->codigo, saldo_carregar, inicio_clientes->nome))
-                    return inicio_transacao;
+                if (inicioTransacao = criarTransacao(inicioTransacao, inicioClientes->codigo, saldoCarregar, inicioClientes->nome))
+                    return inicioTransacao;
             }
             while (inserir == 1)
             {
-                if (inicio_transacao->seguinteTransacao == NULL)
+                if (inicioTransacao->seguinteTransacao == NULL)
                 {
-                    if (criarTransacao(auxTrans, inicio_clientes->codigo, saldo_carregar, inicio_clientes->nome))
+                    if (criarTransacao(auxTrans, inicioClientes->codigo, saldoCarregar, inicioClientes->nome))
                         inserir = 0;
                 }
-                inicio_transacao = inicio_transacao->seguinteTransacao;
+                inicioTransacao = inicioTransacao->seguinteTransacao;
                 if (inserir == 0)
                 {
                     return SUCESSO;
                 }
             }
         }
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        inicioClientes = inicioClientes->seguinteCliente;
     }
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         return COD_NIF_NAO_EXISTE;
     }
@@ -1437,26 +1400,26 @@ Cliente* carregarSaldo(Cliente* inicio_clientes, Transacao* inicio_transacao) {
 
 // Função para consulta de saldo, de um certo utilizador.
 // É pedido o codigo e o NIF, caso coincidam com algum dos utilizadores existentes é possivel visualizar quando saldo está disponível.
-ResFuncoes consultaSaldo(Cliente* inicio_clientes) {
+ResFuncoes consultaSaldo(Cliente* inicioClientes) {
     int codigo, NIF;
     printf("Introduza o seu codigo: ");
     scanf("%d", &codigo);
     //printf("Introduza o seu NIF: ");
     //scanf("%d", &NIF);
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         return CLIENTES_NAO_EXISTEM;
     }
-    while (inicio_clientes != NULL)
+    while (inicioClientes != NULL)
     {
-        if (inicio_clientes->codigo == codigo /*&& inicio_clientes->NIF == NIF*/)
+        if (inicioClientes->codigo == codigo /*&& inicioClientes->NIF == NIF*/)
         {
-            printf("Voce tem %d de saldo.\n", inicio_clientes->saldo);
+            printf("Voce tem %d de saldo.\n", inicioClientes->saldo);
             return SALDO_ATUAL;
         }
-        inicio_clientes = inicio_clientes->seguinteCliente;
+        inicioClientes = inicioClientes->seguinteCliente;
     }
-    if (inicio_clientes == NULL)
+    if (inicioClientes == NULL)
     {
         //printf("Nao existe o cliente com o cod %d.\n", codigo);
         return COD_NIF_NAO_EXISTE;
@@ -1467,44 +1430,44 @@ ResFuncoes consultaSaldo(Cliente* inicio_clientes) {
 // É pedido o codigo de utilizador, é verificado se existe esse mesmo utilizador. De seguida é perguntado qual o meio que deseja alugar. 
 // São apresentados dados, tais como o tipo de meio, o seu custo e o saldo do utilizador. Caso o utilizador, decida comprar o meio
 // É criado um novo registo na lista ligada de alugueres.
-Aluguer* realizarAluguer(Cliente* inicio_clientes, Aluguer* inicio_aluguer, Meio* inicio_meios)
+Aluguer* realizarAluguer(Cliente* inicioClientes, Aluguer* inicioAluguer, Meio* inicioMeios)
 {
-    int meio_Alugar, codigo_utilizador, NIF;
+    int meioAlugar, codigoUtilizador, NIF;
     printf("Insira o seu codigo: ");
-    scanf("%d", &codigo_utilizador);
-    if (existeClienteCod(inicio_clientes, codigo_utilizador) == 0)
+    scanf("%d", &codigoUtilizador);
+    if (existeClienteCod(inicioClientes, codigoUtilizador) == 0)
     {
-        while (inicio_clientes->codigo != codigo_utilizador)
-            inicio_clientes = inicio_clientes->seguinteCliente;
+        while (inicioClientes->codigo != codigoUtilizador)
+            inicioClientes = inicioClientes->seguinteCliente;
         printf("Qual meio deseja alugar? ");
-        scanf("%d", &meio_Alugar);
-        if (existeMeio(inicio_meios, meio_Alugar) == 0)
+        scanf("%d", &meioAlugar);
+        if (existeMeio(inicioMeios, meioAlugar) == 0)
         {
-            while (inicio_meios->codigo != meio_Alugar)
+            while (inicioMeios->codigo != meioAlugar)
             {
-                inicio_meios = inicio_meios->seguinteMeio;
+                inicioMeios = inicioMeios->seguinteMeio;
             }
-            printf("Nome do meio: %s\n", inicio_meios->tipo);
-            printf("O meio custa: %d\n", inicio_meios->custo);
-            printf("Voce tem: %d\n", inicio_clientes->saldo);
-            int escolha_compra;
+            printf("Nome do meio: %s\n", inicioMeios->tipo);
+            printf("O meio custa: %d\n", inicioMeios->custo);
+            printf("Voce tem: %d\n", inicioClientes->saldo);
+            int escolhaCompra;
             printf("Deseja comprar? 1-Sim/2-Nao\n");
             printf("A sua escolha: ");
-            scanf("%d", &escolha_compra);
-            if (escolha_compra != 1)
+            scanf("%d", &escolhaCompra);
+            if (escolhaCompra != 1)
             {
                 return 0;
             }
             else
             {
-                if (inicio_clientes->saldo < inicio_meios->custo)
+                if (inicioClientes->saldo < inicioMeios->custo)
                 {
                     printf("Nao tem saldo suficiente para efetuar a compra.\n");
                     Sleep(2000);
                     system("cls");
                     return 0;
                 }
-                else if (inicio_meios->ativo == 1)
+                else if (inicioMeios->ativo == 1)
                 {
                     printf("Nao pode alugar esse meio, pois ja esta alugado.\n");
                     Sleep(2000);
@@ -1514,43 +1477,43 @@ Aluguer* realizarAluguer(Cliente* inicio_clientes, Aluguer* inicio_aluguer, Meio
                 {
                     time_t dataCompra;
                     time(&dataCompra);
-                    char aux_data_compra[50];
-                    strcpy(aux_data_compra, ctime(&dataCompra));
-                    for (int i = 0; i < strlen(aux_data_compra); i++)
+                    char auxDataCompra[50];
+                    strcpy(auxDataCompra, ctime(&dataCompra));
+                    for (int i = 0; i < strlen(auxDataCompra); i++)
                     {
-                        if (aux_data_compra[i] == '\n')
-                            aux_data_compra[i] = '\0';
+                        if (auxDataCompra[i] == '\n')
+                            auxDataCompra[i] = '\0';
                     }
                     printf("Data da compra: %s\n", ctime(&dataCompra));
                     int inserir = 0;
-                    inicio_clientes->saldo = inicio_clientes->saldo - inicio_meios->custo;
-                    printf("O seu novo saldo %d\n", inicio_clientes->saldo);
+                    inicioClientes->saldo = inicioClientes->saldo - inicioMeios->custo;
+                    printf("O seu novo saldo %d\n", inicioClientes->saldo);
                     while (inserir != 1)
                     {
-                        if (inicio_aluguer == NULL)
+                        if (inicioAluguer == NULL)
                         {
-                            Aluguer* novo_nodo = malloc(sizeof(Aluguer));
-                            novo_nodo->seguinteCompra = NULL;
-                            inicio_aluguer = novo_nodo;
+                            Aluguer* novoNodo = malloc(sizeof(Aluguer));
+                            novoNodo->seguinteCompra = NULL;
+                            inicioAluguer = novoNodo;
                         }
-                        if (inicio_aluguer->seguinteCompra == NULL)
+                        if (inicioAluguer->seguinteCompra == NULL)
                         {
-                            Aluguer* novo_nodo = malloc(sizeof(Aluguer));
-                            novo_nodo->cod_comprador = inicio_clientes->codigo;
-                            strcpy(novo_nodo->nome_comprador, inicio_clientes->nome);
-                            strcpy(novo_nodo->data_compra, aux_data_compra);
-                            strcpy(novo_nodo->nome_meio_comprado, inicio_meios->tipo);
-                            inicio_meios->ativo = 1;
-                            inicio_aluguer->seguinteCompra = novo_nodo;
-                            novo_nodo->seguinteCompra = NULL;
-                            inicio_aluguer = novo_nodo;
+                            Aluguer* novoNodo = malloc(sizeof(Aluguer));
+                            novoNodo->codComprador = inicioClientes->codigo;
+                            strcpy(novoNodo->nomeComprador, inicioClientes->nome);
+                            strcpy(novoNodo->dataCompra, auxDataCompra);
+                            strcpy(novoNodo->nomeMeioComprado, inicioMeios->tipo);
+                            inicioMeios->ativo = 1;
+                            inicioAluguer->seguinteCompra = novoNodo;
+                            novoNodo->seguinteCompra = NULL;
+                            inicioAluguer = novoNodo;
                             printf("Compra efetuada com sucesso.\n");
                             Sleep(2000);
                             system("cls");
                             inserir = 1;
-                            return inicio_aluguer;
+                            return inicioAluguer;
                         }
-                        inicio_aluguer = inicio_aluguer->seguinteCompra;
+                        inicioAluguer = inicioAluguer->seguinteCompra;
                     }
                 }
             }
@@ -1573,29 +1536,29 @@ Aluguer* realizarAluguer(Cliente* inicio_clientes, Aluguer* inicio_aluguer, Meio
 }
 
 // Função para listar na consola, todos os meios existentes com um certo geocodigo.
-void listarGeocodigo(Meio* inicio_meios)
+void listarGeocodigo(Meio* inicioMeios)
 {
     system("cls");
     int verificado = 0, existe = 0;
-    char verificar_geocodigo[50];
-    Meio* aux_print = inicio_meios;
+    char verificarGeocodigo[50];
+    Meio* auxPrint = inicioMeios;
     printf("Introduza o geocodigo que pretende verificar: ");
-    scanf("%s", verificar_geocodigo);
+    scanf("%s", verificarGeocodigo);
     getchar();
 
-    if (inicio_meios == NULL)
+    if (inicioMeios == NULL)
         return 0;
-    while (aux_print != NULL && existe == 0)
+    while (auxPrint != NULL && existe == 0)
     {
-        if (strcmp(verificar_geocodigo, aux_print->geocodigo) == 0)
+        if (strcmp(verificarGeocodigo, auxPrint->geocodigo) == 0)
         {
             existe = 1;
         }
-        aux_print = aux_print->seguinteMeio;
+        auxPrint = auxPrint->seguinteMeio;
     }
     if (existe)
     {
-        printf("Estes sao os meios com o geocodigo %s\n------------------------------------------------------------------------------------------------------------------------\n", verificar_geocodigo);
+        printf("Estes sao os meios com o geocodigo %s\n------------------------------------------------------------------------------------------------------------------------\n", verificarGeocodigo);
     }
     else
     {
@@ -1603,13 +1566,13 @@ void listarGeocodigo(Meio* inicio_meios)
         Sleep(2000);
         system("cls");
     }
-    while (inicio_meios != NULL)
+    while (inicioMeios != NULL)
     {
-        if (strcmp(verificar_geocodigo, inicio_meios->geocodigo) == 0)
+        if (strcmp(verificarGeocodigo, inicioMeios->geocodigo) == 0)
         {
-            printf("Codigo: %d      Tipo: %s      Bat: %.2f      Aut: %.2f      Custo: %d\n", inicio_meios->codigo, inicio_meios->tipo, inicio_meios->bateria, inicio_meios->autonomia, inicio_meios->custo);
+            printf("Codigo: %d      Tipo: %s      Bat: %.2f      Aut: %.2f      Custo: %d\n", inicioMeios->codigo, inicioMeios->tipo, inicioMeios->bateria, inicioMeios->autonomia, inicioMeios->custo);
         }
-        inicio_meios = inicio_meios->seguinteMeio;
+        inicioMeios = inicioMeios->seguinteMeio;
     }
     printf("------------------------------------------------------------------------------------------------------------------------\n");
 }
@@ -1622,25 +1585,26 @@ void listarGeocodigo(Meio* inicio_meios)
 #pragma region LEITURA/ESCRITA/REPRESENTAcaO DE ALUGUER
 // Ler ficheiro de texto, contendo informação sobre os alugueres.
 // Serão todos os dados, inseridos numa lista ligada, que de inicio é vazia.
-Aluguer* lerFicheiroAluguer(Aluguer* inicio_aluguer, FILE* dados_aluguer)
+Aluguer* lerFicheiroAluguer(Aluguer* inicioAluguer, char fileName[])
 {
+    FILE *dadosAluguer = fopen(fileName, "rt");
     char linha[MAX_LINE_LEN];
-    while (fgets(linha, MAX_LINE_LEN, dados_aluguer))
+    while (fgets(linha, MAX_LINE_LEN, dadosAluguer))
     {
-        Aluguer* novo_nodo = malloc(sizeof(Aluguer));
-        sscanf(linha, "%d;%[^;];%[^;];%[^\n]\n", &novo_nodo->cod_comprador, novo_nodo->data_compra, novo_nodo->nome_comprador, novo_nodo->nome_meio_comprado);
-        novo_nodo->seguinteCompra = inicio_aluguer;
-        inicio_aluguer = novo_nodo;
+        Aluguer* novoNodo = malloc(sizeof(Aluguer));
+        sscanf(linha, "%d;%[^;];%[^;];%[^\n]\n", &novoNodo->codComprador, novoNodo->dataCompra, novoNodo->nomeComprador, novoNodo->nomeMeioComprado);
+        novoNodo->seguinteCompra = inicioAluguer;
+        inicioAluguer = novoNodo;
     }
-    fclose(dados_aluguer);
-    return inicio_aluguer;
+    fclose(dadosAluguer);
+    return inicioAluguer;
 }
 
 // Função para listar na consola, o historico dos alugueres já feitos.
-void listarAluguer(Aluguer* inicio_aluguer)
+void listarAluguer(Aluguer* inicioAluguer)
 {
     system("cls");
-    if (inicio_aluguer == NULL)
+    if (inicioAluguer == NULL)
     {
         printf("Nao existem alugueres.\n");
         Sleep(2000);
@@ -1648,24 +1612,24 @@ void listarAluguer(Aluguer* inicio_aluguer)
         return 0;
     }
     printf("Dados de Alugueres:\n------------------------------------------------------------------------------------------------------------------------\n");
-    while (inicio_aluguer != NULL)
+    while (inicioAluguer != NULL)
     {
-        printf("Codigo: %d   Data de compra: %s       Nome: %s Meio: %s\n", inicio_aluguer->cod_comprador, inicio_aluguer->data_compra, inicio_aluguer->nome_comprador, inicio_aluguer->nome_meio_comprado);
-        inicio_aluguer = inicio_aluguer->seguinteCompra;
+        printf("Codigo: %d   Data de compra: %s       Nome: %s Meio: %s\n", inicioAluguer->codComprador, inicioAluguer->dataCompra, inicioAluguer->nomeComprador, inicioAluguer->nomeMeioComprado);
+        inicioAluguer = inicioAluguer->seguinteCompra;
     }
     printf("------------------------------------------------------------------------------------------------------------------------\n");
 }
 
 // Verifica cada aluguer existente, se a sua data for maior que a do seguinte elemento, irá ser feita uma troca
 // para ordenar todos os elementos por ordem de compra.
-Aluguer* bubbleSortAluguer(Aluguer* inicio_aluguer) {
+Aluguer* bubbleSortAluguer(Aluguer* inicioAluguer) {
     Aluguer* atual, * seguinte;
-    int aux_codigo, b = 1;
-    char aux_data[MAX_LEN], aux_comprador[MAX_LEN], aux_meio_comprado[MAX_LEN];
+    int auxCodigo, b = 1;
+    char auxData[MAX_LEN], auxComprador[MAX_LEN], auxMeioComprado[MAX_LEN];
     while (b)
     {
         b = 0;
-        atual = inicio_aluguer;
+        atual = inicioAluguer;
         if (atual == NULL)
         {
             return 0;
@@ -1673,80 +1637,80 @@ Aluguer* bubbleSortAluguer(Aluguer* inicio_aluguer) {
         while (atual->seguinteCompra != NULL)
         {
             seguinte = atual->seguinteCompra;
-            if (strcmp(atual->data_compra, seguinte->data_compra) > 0)
+            if (strcmp(atual->dataCompra, seguinte->dataCompra) > 0)
             {
-                aux_codigo = atual->cod_comprador;
-                strcpy(aux_comprador, atual->nome_comprador);
-                strcpy(aux_data, atual->data_compra);
-                strcpy(aux_meio_comprado, atual->nome_meio_comprado);
+                auxCodigo = atual->codComprador;
+                strcpy(auxComprador, atual->nomeComprador);
+                strcpy(auxData, atual->dataCompra);
+                strcpy(auxMeioComprado, atual->nomeMeioComprado);
 
-                atual->cod_comprador = seguinte->cod_comprador;
-                strcpy(atual->nome_comprador, seguinte->nome_comprador);
-                strcpy(atual->data_compra, seguinte->data_compra);
-                strcpy(atual->nome_meio_comprado, seguinte->nome_meio_comprado);
+                atual->codComprador = seguinte->codComprador;
+                strcpy(atual->nomeComprador, seguinte->nomeComprador);
+                strcpy(atual->dataCompra, seguinte->dataCompra);
+                strcpy(atual->nomeMeioComprado, seguinte->nomeMeioComprado);
 
-                seguinte->cod_comprador = aux_codigo;
-                strcpy(seguinte->nome_comprador, aux_comprador);
-                strcpy(seguinte->data_compra, aux_data);
-                strcpy(seguinte->nome_meio_comprado, aux_meio_comprado);
+                seguinte->codComprador = auxCodigo;
+                strcpy(seguinte->nomeComprador, auxComprador);
+                strcpy(seguinte->dataCompra, auxData);
+                strcpy(seguinte->nomeMeioComprado, auxMeioComprado);
                 b = 1;
             }
             atual = seguinte;
         }
     }
-    inicio_aluguer = atual;
-    return inicio_aluguer;
+    inicioAluguer = atual;
+    return inicioAluguer;
 }
 
 // Escreve todos os dados sobre os alugueres, em ficheiro de texto.
-int escreverFicheiroAluguer(Aluguer* inicio_aluguer, char fileName[])
+int escreverFicheiroAluguer(Aluguer* inicioAluguer, char fileName[])
 {
-    if (inicio_aluguer == NULL)
+    if (inicioAluguer == NULL)
     {
         return -1;
     }
-    FILE *dados_aluguer = fopen(fileName, "wt");
-    if (dados_aluguer == NULL)
+    FILE *dadosAluguer = fopen(fileName, "wt");
+    if (dadosAluguer == NULL)
     {
         return -2;
     }
-    while (inicio_aluguer != NULL)
+    while (inicioAluguer != NULL)
     {
-        fprintf(dados_aluguer, "%d;%s;%s;%s\n", inicio_aluguer->cod_comprador, inicio_aluguer->data_compra, inicio_aluguer->nome_comprador, inicio_aluguer->nome_meio_comprado);
-        inicio_aluguer = inicio_aluguer->seguinteCompra;
+        fprintf(dadosAluguer, "%d;%s;%s;%s\n", inicioAluguer->codComprador, inicioAluguer->dataCompra, inicioAluguer->nomeComprador, inicioAluguer->nomeMeioComprado);
+        inicioAluguer = inicioAluguer->seguinteCompra;
     }
-    fclose(dados_aluguer);
+    fclose(dadosAluguer);
     return 1;
 }
 
 //Escreve todos os dados sobre os alugueres, em ficheiro binário.
-int escreverFicheiroAluguerBin(Aluguer* inicio_aluguer, char fileName[])
+int escreverFicheiroAluguerBin(Aluguer* inicioAluguer, char fileName[])
 {
-    if (inicio_aluguer == NULL)
+    if (inicioAluguer == NULL)
     {
         return -1;
     }
-    FILE *dados_aluguer = fopen(fileName, "wb");
-    if (dados_aluguer == NULL)
+    FILE *dadosAluguer = fopen(fileName, "wb");
+    if (dadosAluguer == NULL)
     {
         return -2;
     }
-    while (inicio_aluguer != NULL)
+    while (inicioAluguer != NULL)
     {
-        fwrite(inicio_aluguer, 1, sizeof(Aluguer), dados_aluguer);
-        inicio_aluguer = inicio_aluguer->seguinteCompra;
+        fwrite(inicioAluguer, 1, sizeof(Aluguer), dadosAluguer);
+        inicioAluguer = inicioAluguer->seguinteCompra;
     }
-    fclose(dados_aluguer);
+    fclose(dadosAluguer);
     return 1;
 }
 
-int existeClienteTransacao(Transacao* inicio_transacao, int codVerificar)
+int existeClienteTransacao(Transacao* inicioTransacao, int codVerificar)
 {
     int teste = 0;
-    Transacao* aux = inicio_transacao;
+    Transacao* aux = inicioTransacao;
     while (aux != NULL)
     {
-        if (aux->codigo_utilizador == codVerificar)
+        if (aux->codigoUtilizador == codVerificar)
             return 1;
         aux = aux->seguinteTransacao;
     }
@@ -1758,64 +1722,65 @@ int existeClienteTransacao(Transacao* inicio_transacao, int codVerificar)
 
 // ---------------------------------------------------INICIO-LEITURA/ESCRITA/REPRESENTAÇÃO DE TRANSACOES----------------------------------------------------
 #pragma region LEITURA/ESCRITA/REPRESENTAcaO DE TRANSACOES
-Transacao* lerFicheiroTransacao(Transacao* inicio_transacao, FILE* dados_transacao)
+Transacao* lerFicheiroTransacao(Transacao* inicioTransacao, char fileName[])
 {
+    FILE *dadosTransacao = fopen(fileName, "rt");
     char linha[MAX_LINE_LEN];
-    while (fgets(linha, MAX_LINE_LEN, dados_transacao))
+    while (fgets(linha, MAX_LINE_LEN, dadosTransacao))
     {
-        Transacao* novo_nodo = malloc(sizeof(Transacao));
-        sscanf(linha, "%d;%[^;];%d;%[^\n]", &novo_nodo->codigo_utilizador, novo_nodo->nome_transacao, &novo_nodo->montante_carregado, novo_nodo->data_transacao);
-        novo_nodo->seguinteTransacao = inicio_transacao;
-        inicio_transacao = novo_nodo;
+        Transacao* novoNodo = malloc(sizeof(Transacao));
+        sscanf(linha, "%d;%[^;];%d;%[^\n]", &novoNodo->codigoUtilizador, novoNodo->nomeTransacao, &novoNodo->montanteCarregado, novoNodo->dataTransacao);
+        novoNodo->seguinteTransacao = inicioTransacao;
+        inicioTransacao = novoNodo;
     }
-    fclose(dados_transacao);
-    return inicio_transacao;
+    fclose(dadosTransacao);
+    return inicioTransacao;
 }
 
-int escreverFicheiroTransacao(Transacao* inicio_transacao, char fileName[])
+int escreverFicheiroTransacao(Transacao* inicioTransacao, char fileName[])
 {
-    if (inicio_transacao == NULL)
+    if (inicioTransacao == NULL)
     {
         return -1;
     }
-    FILE *dados_transacao = fopen(fileName, "wt");
-    if (dados_transacao == NULL)
+    FILE *dadosTransacao = fopen(fileName, "wt");
+    if (dadosTransacao == NULL)
     {
         return -2;
     }
-    while (inicio_transacao != NULL)
+    while (inicioTransacao != NULL)
     {
-        fprintf(dados_transacao, "%d;%s;%d;%s\n", inicio_transacao->codigo_utilizador, inicio_transacao->nome_transacao, inicio_transacao->montante_carregado, inicio_transacao->data_transacao);
-        inicio_transacao = inicio_transacao->seguinteTransacao;
+        fprintf(dadosTransacao, "%d;%s;%d;%s\n", inicioTransacao->codigoUtilizador, inicioTransacao->nomeTransacao, inicioTransacao->montanteCarregado, inicioTransacao->dataTransacao);
+        inicioTransacao = inicioTransacao->seguinteTransacao;
     }
-    fclose(dados_transacao);
+    fclose(dadosTransacao);
     return 1;
 }
 
-int escreverFicheiroTransacaoBin(Transacao* inicio_transacao, char fileName[])
+int escreverFicheiroTransacaoBin(Transacao* inicioTransacao, char fileName[])
 {
-    if (inicio_transacao == NULL)
+    if (inicioTransacao == NULL)
     {
         return -1;
     }
-    FILE *dados_transacao = fopen(fileName, "wb");
-    if (dados_transacao == NULL)
+    FILE *dadosTransacao = fopen(fileName, "wb");
+    if (dadosTransacao == NULL)
     {
         return -2;
     }
-    while (inicio_transacao != NULL)
+    while (inicioTransacao != NULL)
     {
-        fwrite(inicio_transacao, 1, sizeof(Transacao), dados_transacao);
-        inicio_transacao = inicio_transacao->seguinteTransacao;
+        fwrite(inicioTransacao, 1, sizeof(Transacao), dadosTransacao);
+        inicioTransacao = inicioTransacao->seguinteTransacao;
     }
-    fclose(dados_transacao);
+    fclose(dadosTransacao);
     return 1;
 }
 
-void listarTransacao(Transacao* inicio_transacao)
+void listarTransacao(Transacao* inicioTransacao)
 {
     system("cls");
-    if (inicio_transacao == NULL)
+    if (inicioTransacao == NULL)
     {
         printf("Nao existem registos de transacoes.\n");
         Sleep(2000);
@@ -1823,44 +1788,44 @@ void listarTransacao(Transacao* inicio_transacao)
         return 0;
     }
     printf("Dados de transacoes:\n------------------------------------------------------------------------------------------------------------------------\n");
-    while (inicio_transacao != NULL)
+    while (inicioTransacao != NULL)
     {
-        printf("Codigo: %d   Nome: %s     Mont.Carregado: %d Eur   Data: %s \n", inicio_transacao->codigo_utilizador, inicio_transacao->nome_transacao, inicio_transacao->montante_carregado, inicio_transacao->data_transacao);
-        inicio_transacao = inicio_transacao->seguinteTransacao;
+        printf("Codigo: %d   Nome: %s     Mont.Carregado: %d Eur   Data: %s \n", inicioTransacao->codigoUtilizador, inicioTransacao->nomeTransacao, inicioTransacao->montanteCarregado, inicioTransacao->dataTransacao);
+        inicioTransacao = inicioTransacao->seguinteTransacao;
     }
     printf("------------------------------------------------------------------------------------------------------------------------\n");
 }
 
-Transacao* criarTransacao(Transacao* inicio_transacao, int codigoCliente, int saldoCarregar, char nomeCliente[50])
+Transacao* criarTransacao(Transacao* inicioTransacao, int codigoCliente, int saldoCarregar, char nomeCliente[])
 {
-    Transacao* nova_transacao = malloc(sizeof(Transacao));
-    nova_transacao->codigo_utilizador = codigoCliente;
-    nova_transacao->montante_carregado = saldoCarregar;
-    strcpy(nova_transacao->nome_transacao, nomeCliente);
+    Transacao* novaTransacao = malloc(sizeof(Transacao));
+    novaTransacao->codigoUtilizador = codigoCliente;
+    novaTransacao->montanteCarregado = saldoCarregar;
+    strcpy(novaTransacao->nomeTransacao, nomeCliente);
     time_t dataTransacao;
     time(&dataTransacao);
-    char aux_data_transacao[50];
-    strcpy(aux_data_transacao, ctime(&dataTransacao));
-    for (int i = 0; i < strlen(aux_data_transacao); i++)
+    char auxDataTransacao[50];
+    strcpy(auxDataTransacao, ctime(&dataTransacao));
+    for (int i = 0; i < strlen(auxDataTransacao); i++)
     {
-        if (aux_data_transacao[i] == '\n')
-            aux_data_transacao[i] = '\0';
+        if (auxDataTransacao[i] == '\n')
+            auxDataTransacao[i] = '\0';
     }
-    strcpy(nova_transacao->data_transacao, aux_data_transacao);
+    strcpy(novaTransacao->dataTransacao, auxDataTransacao);
 
-    if (inicio_transacao == NULL) {
-        inicio_transacao = nova_transacao;
+    if (inicioTransacao == NULL) {
+        inicioTransacao = novaTransacao;
     }
     else {
-        Transacao* current_transacao = inicio_transacao;
-        while (current_transacao->seguinteTransacao != NULL) {
-            current_transacao = current_transacao->seguinteTransacao;
+        Transacao* currentTransacao = inicioTransacao;
+        while (currentTransacao->seguinteTransacao != NULL) {
+            currentTransacao = currentTransacao->seguinteTransacao;
         }
-        current_transacao->seguinteTransacao = nova_transacao;
+        currentTransacao->seguinteTransacao = novaTransacao;
     }
-    nova_transacao->seguinteTransacao = NULL;
-    inicio_transacao = nova_transacao;
-    return inicio_transacao;
+    novaTransacao->seguinteTransacao = NULL;
+    inicioTransacao = novaTransacao;
+    return inicioTransacao;
 }
 #pragma endregion
 // ---------------------------------------------------FIM-LEITURA/ESCRITA/REPRESENTAÇÃO DE TRANSACOES----------------------------------------------------
@@ -1869,88 +1834,47 @@ Transacao* criarTransacao(Transacao* inicio_transacao, int codigoCliente, int sa
 // ---------------------------------------------------INICIO-LEITURA/ESCRITA/REPRESENTAÇÃO DE CIDADES----------------------------------------------------
 
 #pragma region LEITURA/ESCRITA/REPRESENTAcaO DE CIDADES
-Grafo* lerFicheiroVertices(Grafo* inicio_grafo, Meio* inicio_meios, FILE* dados_grafo)
+Grafo* lerFicheiroVertices(Grafo* inicioGrafo, Meio* inicioMeios, char fileName[])
 {
-    //int existe = 0;
-    //Grafo* aux = inicio_grafo;
-    //Grafo* auxExiste = inicio_grafo;
-    //Meio* auxMeio = inicio_meios;
-    //while (auxMeio != NULL)
-    //{
-    //    existe = 0;
-    //    auxExiste = inicio_grafo;
-    //    if (auxExiste == NULL)
-    //    {
-    //    }
-    //    else
-    //    {
-    //        while (auxExiste != NULL)
-    //        {
-    //            if (strcmp(auxExiste->vertice, auxMeio->geocodigo) == 0)
-    //            {
-    //                existe = 1;
-    //            }
-    //            auxExiste = auxExiste->seguinte_vertice;
-    //        }
-    //    }
-    //    while (existe == 0)
-    //    {
-    //        Grafo* novo_nodo = malloc(sizeof(Grafo));
-    //        strcpy(novo_nodo->vertice, auxMeio->geocodigo);
-    //        novo_nodo->meios = NULL;
-    //        novo_nodo->clientes = NULL;
-    //        novo_nodo->adjacentes = NULL;
-    //        novo_nodo->seguinte_vertice = inicio_grafo;
-    //        inicio_grafo = novo_nodo;
-    //        existe = 1;
-    //    }
-    //    //Grafo* novo_nodo = malloc(sizeof(Grafo));
-    //    //strcpy(novo_nodo->vertice, auxMeio->geocodigo);
-    //    //novo_nodo->meios = NULL;
-    //    //novo_nodo->clientes = NULL;
-    //    //novo_nodo->adjacentes = NULL;
-    //    //novo_nodo->seguinte_vertice = inicio_grafo;
-    //    //inicio_grafo = novo_nodo;
-    //    auxMeio = auxMeio->seguinte_meio;
-    //}
-    //return inicio_grafo;
-    char* token_vertice;
-    if (dados_grafo == NULL)
+    FILE *dadosGrafo = fopen(fileName, "rt");
+    char* tokenVertice;
+    if (dadosGrafo == NULL)
     {
         printf("O ficheiro nao existe.\n");
         return 0;
     }
     char linha[MAX_LINE_LEN];
-    while (fgets(linha, MAX_LINE_LEN, dados_grafo))
+    while (fgets(linha, MAX_LINE_LEN, dadosGrafo))
     {
-        token_vertice = strtok(linha, ";");
-        while (token_vertice != NULL)
+        tokenVertice = strtok(linha, ";");
+        while (tokenVertice != NULL)
         {
-            int pos = strcspn(token_vertice, "\n");
-            token_vertice[pos] = '\0';
-            Grafo* novo_nodo = malloc(sizeof(Grafo));
-            strcpy(novo_nodo->vertice, token_vertice);
-            novo_nodo->meios = NULL;
-            novo_nodo->adjacentes = NULL;
-            novo_nodo->seguinte_vertice = inicio_grafo;
-            inicio_grafo = novo_nodo;
-            token_vertice = strtok(NULL, ";");
+            int pos = strcspn(tokenVertice, "\n");
+            tokenVertice[pos] = '\0';
+            Grafo* novoNodo = malloc(sizeof(Grafo));
+            strcpy(novoNodo->vertice, tokenVertice);
+            novoNodo->meios = NULL;
+            novoNodo->adjacentes = NULL;
+            novoNodo->seguinteVertice = inicioGrafo;
+            inicioGrafo = novoNodo;
+            tokenVertice = strtok(NULL, ";");
         }
     }
-    return inicio_grafo;
+    return inicioGrafo;
 }
 
-Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes)
+Grafo* lerFicheiroAdjacentes(Grafo* inicioGrafo, char fileName[])
 {
-    Adjacente* novo_adj = NULL;
-    Grafo* aux = inicio_grafo;
+    FILE *dadosAdjacentes = fopen(fileName, "rt");
+    Adjacente* novoAdj = NULL;
+    Grafo* aux = inicioGrafo;
     int inserido = 0;
     char* vertice, * adjacente, * peso, linha[MAX_LINE_LEN];
-    while (fgets(linha, MAX_LINE_LEN, dados_adjacentes))
+    while (fgets(linha, MAX_LINE_LEN, dadosAdjacentes))
     {
         inserido = 0;
         vertice = strtok(linha, ";");
-        aux = inicio_grafo;
+        aux = inicioGrafo;
         while (inserido != 1)
         {
             while (aux != NULL)
@@ -1959,15 +1883,15 @@ Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes)
                 {
                     while (vertice != NULL)
                     {
-                        if (novo_adj == NULL)
+                        if (novoAdj == NULL)
                         {
-                            novo_adj = malloc(sizeof(Adjacente));
+                            novoAdj = malloc(sizeof(Adjacente));
                             adjacente = strtok(NULL, "/");
                             peso = strtok(NULL, ";");
-                            strcpy(novo_adj->vertice, adjacente);
-                            novo_adj->peso = atof(peso);
-                            novo_adj->seguinteAdjacente = aux->adjacentes;
-                            aux->adjacentes = novo_adj;
+                            strcpy(novoAdj->vertice, adjacente);
+                            novoAdj->peso = atof(peso);
+                            novoAdj->seguinteAdjacente = aux->adjacentes;
+                            aux->adjacentes = novoAdj;
                         }
                         else
                         {
@@ -1980,35 +1904,35 @@ Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes)
                                     inserido = 1;
                                     break;
                                 }
-                                novo_adj = malloc(sizeof(Adjacente));
-                                strcpy(novo_adj->vertice, adjacente);
-                                novo_adj->peso = atof(peso);
+                                novoAdj = malloc(sizeof(Adjacente));
+                                strcpy(novoAdj->vertice, adjacente);
+                                novoAdj->peso = atof(peso);
                                 if (aux->adjacentes == NULL)
                                 {
-                                    aux->adjacentes = novo_adj;
-                                    novo_adj->seguinteAdjacente = NULL;
+                                    aux->adjacentes = novoAdj;
+                                    novoAdj->seguinteAdjacente = NULL;
                                 }
                                 else
                                 {
-                                    novo_adj->seguinteAdjacente = aux->adjacentes->seguinteAdjacente;
-                                    aux->adjacentes->seguinteAdjacente = novo_adj;
+                                    novoAdj->seguinteAdjacente = aux->adjacentes->seguinteAdjacente;
+                                    aux->adjacentes->seguinteAdjacente = novoAdj;
                                 }
                             }
                         }
                     }
                 }
-                aux = aux->seguinte_vertice;
+                aux = aux->seguinteVertice;
                 if (inserido == 1)
                     break;
             }
         }
     }
-    return inicio_grafo;
+    return inicioGrafo;
 }
 
-void testeCLientes(Grafo* inicio_grafo)
+void testeCLientes(Grafo* inicioGrafo)
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux != NULL)
     {
         if (aux->clientes == NULL)
@@ -2019,18 +1943,18 @@ void testeCLientes(Grafo* inicio_grafo)
         {
             printf("Nome: %s    Cod: %d\n", aux->clientes->nome, aux->clientes->codigo);
         }
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
 }
 
-Grafo* adicionarClientesGrafo(Grafo* inicio_grafo, Cliente* inicio_clientes)
+Grafo* adicionarClientesGrafo(Grafo* inicioGrafo, Cliente* inicioClientes)
 {
     int teste = 0;
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux != NULL)
     {
         teste = 0;
-        Cliente* auxClientes = inicio_clientes;
+        Cliente* auxClientes = inicioClientes;
         while (auxClientes != NULL)
         {
             if (strcmp(auxClientes->geocodigo, aux->vertice) == 0)
@@ -2044,17 +1968,17 @@ Grafo* adicionarClientesGrafo(Grafo* inicio_grafo, Cliente* inicio_clientes)
         {
             aux->clientes = NULL;
         }
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
-    return inicio_grafo->clientes;
+    return inicioGrafo->clientes;
 }
 
-Grafo* adicionarMeiosGrafo(Grafo* inicio_grafo, Meio* inicio_meios)
+Grafo* adicionarMeiosGrafo(Grafo* inicioGrafo, Meio* inicioMeios)
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux != NULL)
     {
-        Meio* auxMeio = inicio_meios;
+        Meio* auxMeio = inicioMeios;
         while (auxMeio != NULL)
         {
             if (strcmp(auxMeio->geocodigo, aux->vertice) == 0)
@@ -2063,15 +1987,15 @@ Grafo* adicionarMeiosGrafo(Grafo* inicio_grafo, Meio* inicio_meios)
             }
             auxMeio = auxMeio->seguinteMeio;
         }
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
-    return inicio_grafo->meios;
+    return inicioGrafo->meios;
 }
 
-ResFuncoes localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_clientes, float raio, int codigo)
+ResFuncoes localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int codigo)
 {
-    Grafo* aux = inicio_grafo;
-    Cliente* auxClientes = inicio_clientes;
+    Grafo* aux = inicioGrafo;
+    Cliente* auxClientes = inicioClientes;
     char geocodigoProcurar[100];
     int print = 0;
     if (!existeClienteCod(auxClientes, codigo))
@@ -2086,7 +2010,7 @@ ResFuncoes localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_clientes, float 
     strcpy(geocodigoProcurar, auxClientes->geocodigo);
     while (strcmp(geocodigoProcurar, aux->vertice) != 0)
     {
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
     Adjacente* auxAdj = aux->adjacentes;
     while (auxAdj != NULL)
@@ -2106,9 +2030,9 @@ ResFuncoes localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_clientes, float 
     return SUCESSO;
 }
 
-void printTestGrafo(Grafo* inicio_grafo)
+void printTestGrafo(Grafo* inicioGrafo)
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux->clientes != NULL)
     {
         printf("Cliente: %s \n", aux->clientes->nome);
@@ -2120,19 +2044,19 @@ void printTestGrafo(Grafo* inicio_grafo)
         aux->meios = aux->meios->seguinteMeio;
     }
 }
-void listarGrafo(Grafo* inicio_grafo)
+void listarGrafo(Grafo* inicioGrafo)
 {
     char aux[100];
     char continuar = 0;
     printf("Localizacoes existentes:\n");
-    while (inicio_grafo != NULL)
+    while (inicioGrafo != NULL)
     {
         printf("->");
-        strcpy(aux, inicio_grafo->vertice);
-        int pos = strcspn(inicio_grafo->vertice, "\n");
-        inicio_grafo->vertice[pos] = '\0';
-        printf("%s\n", inicio_grafo->vertice);
-        inicio_grafo = inicio_grafo->seguinte_vertice;
+        strcpy(aux, inicioGrafo->vertice);
+        int pos = strcspn(inicioGrafo->vertice, "\n");
+        inicioGrafo->vertice[pos] = '\0';
+        printf("%s\n", inicioGrafo->vertice);
+        inicioGrafo = inicioGrafo->seguinteVertice;
     }
     printf("Prima espaco e de seguida enter para sair.");
     while (continuar != " ")
@@ -2148,25 +2072,25 @@ void listarGrafo(Grafo* inicio_grafo)
     }
 }
 
-void listarAdjacentes(Grafo* inicio_grafo)
+void listarAdjacentes(Grafo* inicioGrafo)
 {
     char continuar = 0;
-    while (inicio_grafo != NULL)
+    while (inicioGrafo != NULL)
     {
-        printf("Dados de %s:\n------------------------------------------------------------------------------------------------------------------------\n", inicio_grafo->vertice);
+        printf("Dados de %s:\n------------------------------------------------------------------------------------------------------------------------\n", inicioGrafo->vertice);
         printf("Esta localizacao pode ir para:\n");
-        if (inicio_grafo->adjacentes == NULL)
+        if (inicioGrafo->adjacentes == NULL)
         {
-            printf("A localizacao %s nao tem destinos.\n", inicio_grafo->vertice);
+            printf("A localizacao %s nao tem destinos.\n", inicioGrafo->vertice);
         }
-        while (inicio_grafo->adjacentes != NULL)
+        while (inicioGrafo->adjacentes != NULL)
         {
-            printf("%s com distancia de %.2f km; \n", inicio_grafo->adjacentes->vertice, inicio_grafo->adjacentes->peso);
-            inicio_grafo->adjacentes = inicio_grafo->adjacentes->seguinteAdjacente;
+            printf("%s com distancia de %.2f km; \n", inicioGrafo->adjacentes->vertice, inicioGrafo->adjacentes->peso);
+            inicioGrafo->adjacentes = inicioGrafo->adjacentes->seguinteAdjacente;
         }
         printf("------------------------------------------------------------------------------------------------------------------------\n");
         printf("\n");
-        inicio_grafo = inicio_grafo->seguinte_vertice;
+        inicioGrafo = inicioGrafo->seguinteVertice;
     }
     printf("Prima espaco e enter para sair.");
     while (continuar != " ")
@@ -2182,48 +2106,48 @@ void listarAdjacentes(Grafo* inicio_grafo)
     }
 }
 
-int existeVertice(Grafo* inicio_grafo, char verticeVerificar[])
+int existeVertice(Grafo* inicioGrafo, char verticeVerificar[])
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux != NULL)
     {
         if (strcmp(verticeVerificar, aux->vertice) == 0)
         {
             return 1;
         }
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
     return 0;
 }
 
-int inserirVertice(Grafo* inicio_grafo, char verticeInserir[])
+int inserirVertice(Grafo* inicioGrafo, char verticeInserir[])
 {
-    while (inicio_grafo != NULL)
+    while (inicioGrafo != NULL)
     {
-        if (inicio_grafo->seguinte_vertice == NULL)
+        if (inicioGrafo->seguinteVertice == NULL)
         {
-            Grafo* novo_vertice = malloc(sizeof(Grafo));
-            strcpy(novo_vertice->vertice, verticeInserir);
-            novo_vertice->adjacentes = NULL;
-            novo_vertice->meios = NULL;
-            inicio_grafo->seguinte_vertice = novo_vertice;
-            novo_vertice->seguinte_vertice = NULL;
-            inicio_grafo = novo_vertice;
+            Grafo* novoVertice = malloc(sizeof(Grafo));
+            strcpy(novoVertice->vertice, verticeInserir);
+            novoVertice->adjacentes = NULL;
+            novoVertice->meios = NULL;
+            inicioGrafo->seguinteVertice = novoVertice;
+            novoVertice->seguinteVertice = NULL;
+            inicioGrafo = novoVertice;
         }
-        inicio_grafo = inicio_grafo->seguinte_vertice;
+        inicioGrafo = inicioGrafo->seguinteVertice;
     }
-    return inicio_grafo, 1;
+    return inicioGrafo, 1;
 }
 
-int escreverFicheiroGrafo(Grafo* inicio_grafo, char fileName[])
+int escreverFicheiroGrafo(Grafo* inicioGrafo, char fileName[])
 {
-    Grafo* aux = inicio_grafo;
-    if (inicio_grafo == NULL)
+    Grafo* aux = inicioGrafo;
+    if (inicioGrafo == NULL)
     {
         return -1;
     }
-    FILE *dados_grafo = fopen(fileName, "wt");
-    if (dados_grafo == NULL)
+    FILE *dadosGrafo = fopen(fileName, "wt");
+    if (dadosGrafo == NULL)
     {
         return -2;
     }
@@ -2232,51 +2156,51 @@ int escreverFicheiroGrafo(Grafo* inicio_grafo, char fileName[])
     while (aux != NULL)
     {
         strcpy(listaCopiada[iterador], aux->vertice);
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
         iterador++;
     }
     for (int i = iterador; i > 0; i--)
     {
-        fprintf(dados_grafo, "%s;", listaCopiada[iterador - 1]);
+        fprintf(dadosGrafo, "%s;", listaCopiada[iterador - 1]);
         iterador--;
     }
-    fclose(dados_grafo);
+    fclose(dadosGrafo);
     return 1;
 }
 
-int existeAdjacente(Grafo* inicio_grafo, char verticeFinal[50])
+int existeAdjacente(Grafo* inicioGrafo, char verticeFinal[])
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     while (aux != NULL)
     {
-        if (strcmp(aux->adjacentes->vertice, verticeFinal) == 0)
+        if (strcmp(aux->vertice, verticeFinal) == 0)
         {
             return 1;
         }
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
     }
     return 0;
 }
 
-int inserirAdjacente(Grafo* inicio_grafo, char verticeInicial[], char verticeFinal[], float peso)
+int inserirAdjacente(Grafo* inicioGrafo, char verticeInicial[], char verticeFinal[], float peso)
 {
-    Grafo* aux = inicio_grafo;
+    Grafo* aux = inicioGrafo;
     int existeVert = 0, existeAdj = 0;
     existeVert = existeVertice(aux, verticeInicial);
     existeAdj = existeAdjacente(aux, verticeFinal);
     if (existeVert)
     {
         while (!strcmp(aux->vertice, verticeInicial) == 0)
-            aux = aux->seguinte_vertice;
+            aux = aux->seguinteVertice;
         if (!existeAdj)
         {
-            Adjacente* novo_adj = malloc(sizeof(Adjacente));
-            strcpy(novo_adj->vertice, verticeFinal);
-            novo_adj->peso = peso;
-            novo_adj->seguinteAdjacente = aux->adjacentes;
-            aux->adjacentes = novo_adj;
-            inicio_grafo = aux;
-            return inicio_grafo, 1;
+            Adjacente* novoAdj = malloc(sizeof(Adjacente));
+            strcpy(novoAdj->vertice, verticeFinal);
+            novoAdj->peso = peso;
+            novoAdj->seguinteAdjacente = aux->adjacentes;
+            aux->adjacentes = novoAdj;
+            inicioGrafo = aux;
+            return inicioGrafo, 1;
         }
         else
         {
@@ -2286,34 +2210,34 @@ int inserirAdjacente(Grafo* inicio_grafo, char verticeInicial[], char verticeFin
     return 0;
 }
 
-int totalVertices(Grafo* inicio_grafo)
+int totalVertices(Grafo* inicioGrafo)
 {
     int total = 0;
-    Grafo* aux = inicio_grafo;
-    while (aux != NULL && aux->seguinte_vertice != NULL)
+    Grafo* aux = inicioGrafo;
+    while (aux != NULL && aux->seguinteVertice != NULL)
     {
-        aux = aux->seguinte_vertice;
+        aux = aux->seguinteVertice;
         total++;
     }
     return total;
 }
 
-ListaStack* caminhoTexto(Grafo* inicio_grafo, char verticeAtual[], char verticeDestino[], Stack* inicio_stack, ListaStack* inicio_lista)
+ListaStack* caminhoTexto(Grafo* inicioGrafo, char verticeAtual[], char verticeDestino[], Stack* inicioStack, ListaStack* inicioLista)
 {
-    Grafo* aux = inicio_grafo;
-    Stack* aux_stack = inicio_stack;
-    Adjacente* aux_adj = NULL;
+    Grafo* aux = inicioGrafo;
+    Stack* auxStack = inicioStack;
+    Adjacente* auxAdj = NULL;
     if (existeVertice(aux, verticeAtual))
     {
         while (aux != NULL)
         {
             if (strcmp(aux->vertice, verticeAtual) == 0)
             {
-                aux_stack = push(aux_stack, aux->vertice);
-                inicio_stack = aux_stack;
+                auxStack = push(auxStack, aux->vertice);
+                inicioStack = auxStack;
                 break;
             }
-            aux = aux->seguinte_vertice;
+            aux = aux->seguinteVertice;
         }
     }
     else
@@ -2322,44 +2246,44 @@ ListaStack* caminhoTexto(Grafo* inicio_grafo, char verticeAtual[], char verticeD
     if (strcmp(aux->vertice, verticeDestino) == 0)
     {
         ListaStack* novaListaStack = malloc(sizeof(ListaStack));
-        novaListaStack->novaStack = inicio_stack;
-        novaListaStack->seguinte_lista = inicio_lista;
-        inicio_lista = novaListaStack;
-        mostrarCaminho(inicio_lista);
+        novaListaStack->novaStack = inicioStack;
+        novaListaStack->seguinteLista = inicioLista;
+        inicioLista = novaListaStack;
+        mostrarCaminho(inicioLista);
         return;
     }
 
-    aux_adj = aux->adjacentes;
-    while (aux_adj != NULL)
+    auxAdj = aux->adjacentes;
+    while (auxAdj != NULL)
     {
-        if (!verticeVisitado(inicio_stack, aux_adj->vertice))
+        if (!verticeVisitado(inicioStack, auxAdj->vertice))
         {
-            Stack* novo_stack = NULL;
-            Stack* aux_stack2 = inicio_stack;
-            while (aux_stack2 != NULL)
+            Stack* novaStack = NULL;
+            Stack* auxStack2 = inicioStack;
+            while (auxStack2 != NULL)
             {
-                novo_stack = push(novo_stack, aux_stack2->vertice);
-                aux_stack2 = aux_stack2->seguinte_stack;
+                novaStack = push(novaStack, auxStack2->vertice);
+                auxStack2 = auxStack2->seguinteStack;
             }
 
-            inicio_stack->visitado = true;
-            caminhoTexto(inicio_grafo, aux_adj->vertice, verticeDestino, novo_stack, inicio_lista);
+            inicioStack->visitado = true;
+            caminhoTexto(inicioGrafo, auxAdj->vertice, verticeDestino, novaStack, inicioLista);
         }
-        aux_adj = aux_adj->seguinteAdjacente;
+        auxAdj = auxAdj->seguinteAdjacente;
     }
-    return inicio_lista;
+    return inicioLista;
 }
 
-bool verticeVisitado(Stack* inicio_stack, char vertice[])
+bool verticeVisitado(Stack* inicioStack, char vertice[])
 {
-    Stack* aux_stack = inicio_stack;
-    while (aux_stack != NULL)
+    Stack* auxStack = inicioStack;
+    while (auxStack != NULL)
     {
-        if (strcmp(aux_stack->vertice, vertice) == 0)
+        if (strcmp(auxStack->vertice, vertice) == 0)
         {
             return true;
         }
-        aux_stack = aux_stack->seguinte_stack;
+        auxStack = auxStack->seguinteStack;
     }
     return false;
 }
@@ -2367,56 +2291,56 @@ bool verticeVisitado(Stack* inicio_stack, char vertice[])
 
 #pragma region STACK
 
-Stack* push(Stack* inicio_stack, char vertice[])
+Stack* push(Stack* inicioStack, char vertice[])
 {
-    Stack* aux = inicio_stack;
-    if (inicio_stack == NULL)
+    Stack* aux = inicioStack;
+    if (inicioStack == NULL)
     {
-        Stack* novo_stack = malloc(sizeof(Stack));
-        strcpy(novo_stack->vertice, vertice);
-        novo_stack->visitado = true;
-        novo_stack->seguinte_stack = inicio_stack;
-        return novo_stack;
+        Stack* novaStack = malloc(sizeof(Stack));
+        strcpy(novaStack->vertice, vertice);
+        novaStack->visitado = true;
+        novaStack->seguinteStack = inicioStack;
+        return novaStack;
     }
     else
     {
-        while (inicio_stack->seguinte_stack != NULL)
+        while (inicioStack->seguinteStack != NULL)
         {
-            inicio_stack = inicio_stack->seguinte_stack;
+            inicioStack = inicioStack->seguinteStack;
         }
-        Stack* novo_stack = malloc(sizeof(Stack));
-        strcpy(novo_stack->vertice, vertice);
-        novo_stack->seguinte_stack = NULL;
-        inicio_stack->seguinte_stack = novo_stack;
+        Stack* novaStack = malloc(sizeof(Stack));
+        strcpy(novaStack->vertice, vertice);
+        novaStack->seguinteStack = NULL;
+        inicioStack->seguinteStack = novaStack;
     }
     return aux;
 }
 
 
 
-void mostrarCaminho(ListaStack* inicio_lista) {
-    if (inicio_lista == NULL)
+void mostrarCaminho(ListaStack* inicioLista) {
+    if (inicioLista == NULL)
     {
         printf("Caminho nao encontrado.\n");
         return;
     }
 
-    ListaStack* aux_lista = inicio_lista;
-    while (aux_lista != NULL)
+    ListaStack* auxLista = inicioLista;
+    while (auxLista != NULL)
     {
-        Stack* aux_stack = aux_lista->novaStack;
+        Stack* auxStack = auxLista->novaStack;
 
-        while (aux_stack != NULL)
+        while (auxStack != NULL)
         {
-            printf("%s", aux_stack->vertice);
-            if (aux_stack->seguinte_stack != NULL)
+            printf("%s", auxStack->vertice);
+            if (auxStack->seguinteStack != NULL)
             {
                 printf(" -> ");
             }
-            aux_stack = aux_stack->seguinte_stack;
+            auxStack = auxStack->seguinteStack;
         }
         printf("\n");
-        aux_lista = aux_lista->seguinte_lista;
+        auxLista = auxLista->seguinteLista;
     }
 }
 #pragma endregion
