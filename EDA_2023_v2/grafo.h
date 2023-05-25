@@ -39,7 +39,7 @@ Grafo* adicionarMeiosGrafo(Grafo* inicio_grafo, Meio* inicio_meios);
 
 Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes);
 
-int localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_cliente, float raio, int codigo);
+int localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_cliente, float raio, int codigo, char tipoMeio[]);
 
 void printTestGrafo(Grafo* inicio_grafo);
 
@@ -65,6 +65,8 @@ bool verticeVisitado(Stack* inicio_stack, char vertice[]);
 
 #pragma region STACK
 
+Stack* inserirStack(Stack* inicioStack, char vertice[]);
+
 Stack* push(Stack* inicio_stack, char vertice[]);
 
 void mostrarCaminho(ListaStack* inicio_stack);
@@ -86,6 +88,10 @@ void listarTransacao(Transacao* inicio_transacao);
 int existeClienteTransacao(Transacao* inicio_transacao, int codVerificar);
 
 Transacao* criarTransacao(Transacao* inicio_transacao, int codigoCliente, int saldoCarregar, char nomeCliente[]);
+
+ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float Tamanho);
+
+ListaStack* retirarStackMaior(ListaStack* inicioLista);
 
 
 // -------------------------------------------------------------------FUNÇÕES_F-TRANSACOES--------------------------------------------------------------------

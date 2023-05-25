@@ -76,12 +76,11 @@ typedef struct RegistoTransacoes
 	struct RegistoTransacoes* seguinteTransacao;
 }Transacao;
 
-
-
 typedef struct Adjacente
 {
 	char vertice[MAX_LEN]; // geocódigo what3words
 	float peso;
+	Meio* meios;
 	struct Adjacente* seguinteAdjacente;
 } Adjacente;
 
@@ -100,12 +99,15 @@ typedef struct Stack
 {
 	char vertice[MAX_LEN];
 	bool visitado;
+	float dist;
+	bool veiculo;
 	struct Stack* seguinteStack;
 }Stack;
 
 typedef struct ListaStack
 {
 	Stack* novaStack;
+	float tamanho;
 	struct ListaStack* seguinteLista;
 } ListaStack;
 

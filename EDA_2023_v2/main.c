@@ -35,7 +35,7 @@ int main() {
     int op, op_utilizador, utilizador_login = 0, gestor_login = 0, op_gestor, retFunc;
     int novoCliente_codigo, novoCliente_NIF, novoCliente_saldo, novo_meio_codigo, novo_meio_custo, novo_gestor_codigo, codigo_meio_remover
         , codigo_cliente_remover, codigo_gestor_remover, codigo_login_utilizador;
-    float novo_meio_bateria, novo_meio_autonomia, novopesoAdjacente;
+    float novo_meio_bateria, novo_meio_autonomia, novopesoAdjacente, tamanhoAdj;
     char novoCliente_nome[MAX_LEN], novo_meio_nome[MAX_LEN], novo_meio_geocodigo[MAX_LEN], novo_gestor_nome[MAX_LEN], novo_gestor_senha[MAX_LEN],
         novo_gestor_area[MAX_LEN], novoverticeinicial[MAX_LEN], novoverticeFinal[MAX_LEN]
         , verticeInicial[MAX_LEN], verticeDestino[MAX_LEN], novoCliente_geocodigo[MAX_LEN];
@@ -197,12 +197,25 @@ int main() {
                     listarGeocodigo(inicioMeios);
                     break;
                 case 7:
-                    printf("Insira a partida e o destino:\n");
-                    printf("Partida: ");
-                    strcpy(verticeInicial, "fagocitose.crestar.esperanca");
-                    //scanf("%s", verticeInicial);
-                    inicioLista = caminhoTexto(inicioGrafo, verticeInicial, inicioStack, inicioLista);
-                    mostrarCaminho(inicioLista);
+                    printf("Qual pretende saber:\n");
+                    printf("1- Distancia de uma cidade a outra.\n");
+                    int escolhaDist;
+                    printf("A sua escolha: ");
+                    scanf("%d", &escolhaDist);
+                    switch (escolhaDist)
+                    {
+                    case 1:
+                        printf("Insira a partida e o destino:\n");
+                        strcpy(verticeInicial, "fagocitose.crestar.esperanca");
+
+                        tamanhoAdj = 0;
+                        float tamanhoBateria = 0;
+                        int camiao = 0;
+                        inicioLista = mostrarTeste(inicioGrafo, verticeInicial, inicioStack, inicioLista, tamanhoAdj, camiao);
+                        inicioLista = retirarStackMaior(inicioLista);
+                        mostrarCaminho(inicioLista);
+                        break;
+                    }
                     break;
                 case 8:
                     listarAdjacentes(inicioGrafo);
@@ -211,11 +224,14 @@ int main() {
                     printf("Introduza em km's, a distancia pela qual pretende verificar a existencia de meios: ");
                     float raioVerificar;
                     int codigoCliente;
+                    char tipoMeio[20];
                     scanf("%f", &raioVerificar);
                     printf("Introduza o seu codigo: ");
                     scanf("%d", &codigoCliente);
-                    if (localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente) < 0)
-                        printf("Erro\n");
+                    printf("Introduza o nome do meio a procurar: ");
+                    scanf("%s", tipoMeio);
+                    if (localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente, tipoMeio) < 0)
+                        printf("Erro nos clientes\n");
                 case 0:
                     utilizador_login = 0;
                     break;

@@ -2000,12 +2000,12 @@ Grafo* adicionarMeiosGrafo(Grafo* inicioGrafo, Meio* inicioMeios)
     return inicioGrafo->meios;
 }
 
-int localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int codigo)
+int localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int codigo, char tipoMeio[])
 {
     Grafo* aux = inicioGrafo;
     Cliente* auxClientes = inicioClientes;
     char geocodigoProcurar[100];
-    int print = 0;
+    int print = 0, existe = 0;
     if (!existeClienteCod(auxClientes, codigo))
     {
         while (auxClientes->codigo != codigo)
@@ -2023,20 +2023,32 @@ int localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int
     Adjacente* auxAdj = aux->adjacentes;
     while (auxAdj != NULL)
     {
-        if (raio > auxAdj->peso)
+        Grafo* auxMeio = inicioGrafo;
+        if (raio >= auxAdj->peso)
         {
-            printf("Pode ir para %s com uma distancia de %.2f\n", auxAdj->vertice, auxAdj->peso);
-            print = 1;
+            while (auxMeio != NULL && strcmp(auxAdj->vertice, auxMeio->vertice) != 0)
+            {
+                auxMeio = auxMeio->seguinteVertice;
+            }
+            while (auxMeio->meios != NULL)
+            {
+                if (strcmp(auxMeio->meios->tipo, tipoMeio) == 0)
+                {
+                    printf("Existe o meio %s na localizacao %s.\n", auxMeio->meios->tipo, auxAdj->vertice);
+                    print = 1;
+                }
+                auxMeio->meios = auxMeio->meios->seguinteMeio;
+            }
         }
         auxAdj = auxAdj->seguinteAdjacente;
     }
     if (print == 0)
     {
         printf("Nao e possivel ir para nenhuma localizacao com a distancia definida.\n");
-        return -2;
     }
     return 1;
 }
+
 
 void printTestGrafo(Grafo* inicioGrafo)
 {
@@ -2324,8 +2336,6 @@ Stack* push(Stack* inicioStack, char vertice[])
     return aux;
 }
 
-
-
 void mostrarCaminho(ListaStack* inicioLista) {
     if (inicioLista == NULL)
     {
@@ -2351,6 +2361,167 @@ void mostrarCaminho(ListaStack* inicioLista) {
         auxLista = auxLista->seguinteLista;
     }
 }
+
+ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float Tamanho, int camiao)
+{
+    Grafo* aux = inicioGrafo;
+    Stack* auxStack = inicioStack;
+    Adjacente* auxAdj = NULL;
+    if (existeVertice(aux, verticeAtual))
+    {
+        while (aux != NULL)
+        {
+            if (strcmp(aux->vertice, verticeAtual) == 0)
+            {
+                auxStack = inserirStack(auxStack, aux->vertice);
+                inicioStack = auxStack;
+                break;
+            }
+            aux = aux->seguinteVertice;
+        }
+    }
+    if (todosVisitados(inicioStack, inicioGrafo))
+    {
+        ListaStack* novaListaStack = malloc(sizeof(ListaStack));
+        novaListaStack->novaStack = inicioStack;
+        novaListaStack->tamanho = Tamanho;
+        novaListaStack->seguinteLista = inicioLista;
+        inicioLista = novaListaStack;
+        Tamanho = 0;
+        return inicioLista;
+    }
+
+    auxAdj = aux->adjacentes;
+    while (auxAdj != NULL)
+    {
+        if (!verticeVisitado(inicioStack, auxAdj->vertice))
+        {
+            Stack* novaStack = NULL;
+            Stack* auxStack2 = inicioStack;
+            Stack* stackBateriaBaixa = NULL;
+            while (auxStack2 != NULL)
+            {
+                if (auxAdj->meios->bateria < 50)
+                {
+                    camiao++;
+                    if (camiao > 1)
+                    {
+                        return;
+                    }
+                }
+                Stack* novoNodo = malloc(sizeof(Stack));
+                strcpy(novoNodo->vertice, auxStack2->vertice);
+                novoNodo->seguinteStack = NULL;
+                if (novaStack == NULL)
+                    novaStack = novoNodo;
+                else
+                {
+                    Stack* aux = novaStack;
+                    while (aux->seguinteStack != NULL)
+                        aux = aux->seguinteStack;
+                    aux->seguinteStack = novoNodo;
+                }
+                auxStack2 = auxStack2->seguinteStack;
+            }
+            if (novaStack != NULL)
+            {
+                novaStack->visitado = true;
+            }
+            inicioLista = mostrarTeste(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, Tamanho + auxAdj->peso, camiao);
+        }
+        auxAdj = auxAdj->seguinteAdjacente;
+    }
+    return inicioLista;
+}
+
+ListaStack* retirarStackMaior(ListaStack* inicioLista)
+{
+    ListaStack* aux = inicioLista, * anterior = NULL;
+    float menorcaminho = aux->tamanho;
+    while (aux != NULL)
+    {
+        float auxCaminho;
+        auxCaminho = aux->tamanho;
+        if (auxCaminho < menorcaminho)
+            menorcaminho = aux->tamanho;
+        aux = aux->seguinteLista;
+
+    }
+    aux = inicioLista;
+    while (aux != NULL)
+    {
+        if (aux->tamanho > menorcaminho)
+        {
+            if (anterior != NULL)
+            {
+                anterior->seguinteLista = aux->seguinteLista;
+            }
+            else
+            {
+                inicioLista = aux->seguinteLista;
+            }
+            ListaStack* auxRemover = aux;
+            aux = aux->seguinteLista;
+            free(auxRemover);
+        }
+        else
+        {
+            anterior = aux;
+            aux = aux->seguinteLista;
+        }
+    }
+    inicioLista = anterior;
+    return inicioLista;
+}
+
+Stack* inserirStack(Stack* inicioStack, char vertice[])
+{
+    Stack* aux = inicioStack;
+    if (inicioStack == NULL)
+    {
+        Stack* novoStack = malloc(sizeof(Stack));
+        strcpy(novoStack->vertice, vertice);
+        novoStack->visitado = true;
+        novoStack->seguinteStack = inicioStack;
+        return novoStack;
+    }
+    else
+    {
+        while (inicioStack->seguinteStack != NULL)
+        {
+            inicioStack = inicioStack->seguinteStack;
+        }
+        Stack* novoStack = malloc(sizeof(Stack));
+        strcpy(novoStack->vertice, vertice);
+        novoStack->seguinteStack = NULL;
+        inicioStack->seguinteStack = novoStack;
+    }
+    return aux;
+}
+
+int todosVisitados(Stack* inicioStack, Grafo* inicioGrafo)
+{
+    Grafo* aux = inicioGrafo;
+    while (aux != NULL)
+    {
+        Stack* auxStack = inicioStack;
+        while (auxStack != NULL)
+        {
+            if (strcmp(auxStack->vertice, aux->vertice) == 0)
+                break;
+            auxStack = auxStack->seguinteStack;
+        }
+        if (auxStack == NULL)
+            return -1;
+        if (!verticeVisitado(inicioStack, aux->vertice))
+        {
+            return -2;
+        }
+        aux = aux->seguinteVertice;
+    }
+    return 1;
+}
+
 #pragma endregion
 
 // ---------------------------------------------------FIM-LEITURA/ESCRITA/REPRESENTAÇÃO DE CIDADES----------------------------------------------------
