@@ -208,13 +208,14 @@ int main() {
                     listarAdjacentes(inicioGrafo);
                     break;
                 case 9:
-                    printf("Introduza em km's, a distancia pela qual pretende verificar a existencia de meios:");
+                    printf("Introduza em km's, a distancia pela qual pretende verificar a existencia de meios: ");
                     float raioVerificar;
                     int codigoCliente;
                     scanf("%f", &raioVerificar);
-                    printf("Introduza o seu codigo:");
+                    printf("Introduza o seu codigo: ");
                     scanf("%d", &codigoCliente);
-                    localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente);
+                    if (localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente) < 0)
+                        printf("Erro\n");
                 case 0:
                     utilizador_login = 0;
                     break;

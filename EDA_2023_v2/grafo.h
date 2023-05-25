@@ -39,7 +39,7 @@ Grafo* adicionarMeiosGrafo(Grafo* inicio_grafo, Meio* inicio_meios);
 
 Grafo* lerFicheiroAdjacentes(Grafo* inicio_grafo, FILE* dados_adjacentes);
 
-ResFuncoes localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_cliente, float raio, int codigo);
+int localizacaoRaio(Grafo* inicio_grafo, Cliente* inicio_cliente, float raio, int codigo);
 
 void printTestGrafo(Grafo* inicio_grafo);
 

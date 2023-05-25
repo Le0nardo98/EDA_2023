@@ -86,6 +86,9 @@ int menuUtilizador()
     printf("4 - Alteracao dos seus dados.\n");
     printf("5 - Alugar algum meio.\n");
     printf("6 - Listar por geocodigo.\n");
+    printf("7 - Procurar caminho.\n");
+    printf("8 - Listar adjacentes.\n");
+    printf("9 - Verificar meios num raio.\n");
     printf("0 - Sair.\n");
     printf("A sua escolha: ");
     scanf("%d", &escolha);
@@ -1997,7 +2000,7 @@ Grafo* adicionarMeiosGrafo(Grafo* inicioGrafo, Meio* inicioMeios)
     return inicioGrafo->meios;
 }
 
-ResFuncoes localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int codigo)
+int localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float raio, int codigo)
 {
     Grafo* aux = inicioGrafo;
     Cliente* auxClientes = inicioClientes;
@@ -2010,7 +2013,7 @@ ResFuncoes localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float ra
     }
     else
     {
-        return CLIENTES_NAO_EXISTEM;
+        return -1;
     }
     strcpy(geocodigoProcurar, auxClientes->geocodigo);
     while (strcmp(geocodigoProcurar, aux->vertice) != 0)
@@ -2030,9 +2033,9 @@ ResFuncoes localizacaoRaio(Grafo* inicioGrafo, Cliente* inicioClientes, float ra
     if (print == 0)
     {
         printf("Nao e possivel ir para nenhuma localizacao com a distancia definida.\n");
-        return ERRO;
+        return -2;
     }
-    return SUCESSO;
+    return 1;
 }
 
 void printTestGrafo(Grafo* inicioGrafo)
