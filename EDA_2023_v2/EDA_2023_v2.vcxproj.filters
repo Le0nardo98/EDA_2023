@@ -26,5 +26,23 @@
     <ClInclude Include="funcoes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="clientes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="estruturas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gestores.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="grafo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="meios.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

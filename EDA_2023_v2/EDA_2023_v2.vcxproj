@@ -143,7 +143,13 @@
     <ClCompile Include="funcoes.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="clientes.h" />
+    <ClInclude Include="crud.h" />
+    <ClInclude Include="estruturas.h" />
     <ClInclude Include="funcoes.h" />
+    <ClInclude Include="gestores.h" />
+    <ClInclude Include="grafo.h" />
+    <ClInclude Include="meios.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

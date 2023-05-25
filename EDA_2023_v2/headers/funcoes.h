@@ -50,27 +50,27 @@ typedef struct RegistoClientes
 	int NIF; // NIF do cliente
 	int saldo; // saldo do cliente
 	char geocodigo[MAX_LEN];
-	struct RegistoAluguer* comprador;
+	struct RegistoAlugueres* comprador;
 	struct RegistoClientes* seguinteCliente; // endereço de memória para uma struct registo_clientes
 } Cliente;
 
-typedef struct RegistoGestor
+typedef struct RegistoGestores
 {
 	int codigo; // Identificação do gestor
 	char nome[MAX_LEN]; // nome do gestor
 	char senha[MAX_LEN]; // Senha do gestor
 	int encriptado; // Se a senha está encriptada.
 	char areaResponsavel[MAX_LEN];
-	struct RegistoGestor* seguinteGestor; // endereço de memória para uma struct registo_gestor
+	struct RegistoGestores* seguinteGestor; // endereço de memória para uma struct registo_gestor
 } Gestor;
 
-typedef struct RegistoAluguer
+typedef struct RegistoAlugueres
 {
 	char dataCompra[MAX_LEN]; // Data de compra de um certo meio
 	char nomeComprador[MAX_LEN]; // Nome do comprador.
 	char nomeMeioComprado[MAX_LEN]; // Nome do meio.
 	int codComprador; // Codigo do comprador.
-	struct RegistoAluguer* seguinteCompra;
+	struct RegistoAlugueres* seguinteCompra;
 }Aluguer;
 
 typedef struct RegistoTransacoes

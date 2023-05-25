@@ -12,7 +12,12 @@
 #include <string.h>
 #include <time.h>
 #include <Windows.h>
-#include "funcoes.h"
+#include "estruturas.h"
+#include "clientes.h"
+#include "crud.h"
+#include "gestores.h"
+#include "grafo.h"
+#include "meios.h"
 
 
 int main() {

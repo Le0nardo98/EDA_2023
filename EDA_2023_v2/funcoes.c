@@ -12,7 +12,12 @@
 #include <string.h>
 #include <time.h>
 #include <Windows.h>
-#include "funcoes.h"
+#include "estruturas.h"
+#include "clientes.h"
+#include "crud.h"
+#include "gestores.h"
+#include "grafo.h"
+#include "meios.h"
 #define MAX_LEN 150
 
 
@@ -471,7 +476,7 @@ Gestor* lerFicheiroGestores(Gestor* inicioGestor, char fileName[])
     char linha[MAX_LINE_LEN];
     while (fgets(linha, MAX_LINE_LEN, dadosGestor))
     {
-        Gestor* novoNodo = malloc(sizeof(struct RegistoGestor));
+        Gestor* novoNodo = malloc(sizeof(struct RegistoGestores));
         sscanf(linha, "%d;%[^;];%[^;];%d;%s\n", &novoNodo->codigo, novoNodo->nome, novoNodo->senha, &novoNodo->encriptado, novoNodo->areaResponsavel);
         novoNodo->seguinteGestor = inicioGestor;
         inicioGestor = novoNodo;
