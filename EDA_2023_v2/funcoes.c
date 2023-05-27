@@ -2544,7 +2544,7 @@ ListaStack* mostrarCaminhoIda(Grafo* inicioGrafo, char verticeAtual[], Stack* in
     {
         return NULL;
     }
-    if (todosVisitados(inicioStack, inicioGrafo))
+    if (todosVisitados(inicioStack, inicioGrafo) == 1)
     {
         ListaStack* novaListaStack = malloc(sizeof(ListaStack));
         novaListaStack->novaStack = inicioStack;
