@@ -1,9 +1,8 @@
-fagocitose.crestar.esperanca;fracos.ovelha.quadradao/2.0;revaloriza.dignificante.velhos/5.0;arrumar.etiquetar.pressione/50.0
-revaloriza.dignificante.velhos;inala.fervido.engavetar/6.2;ocupei.embasando.ralar/2.3
-arrumar.etiquetar.pressione;revaloriza.dignificante.velhos/10.0;reparou.definicao.artilheiro/5.5
+fagocitose.crestar.esperanca;fracos.ovelha.quadradao/2.0;revaloriza.dignificante.velhos/5.0;arrumar.etiquetar.pressione/5.0
 fracos.ovelha.quadradao;maloca.fungos.poderia/4.3;ocupei.embasando.ralar/5.0
-reparou.definicao.artilheiro;maloca.fungos.poderia/4.3;ocupei.embasando.ralar/3.3;inala.fervido.engavetar/10.4
-maloca.fungos.poderia;ocupei.embasando.ralar/9.0;inala.fervido.engavetar/8.0
+maloca.fungos.poderia;ocupei.embasando.ralar/9.0;inala.fervido.engavetar/8.0;fagocitose.crestar.esperanca/20.0
 ocupei.embasando.ralar;fracos.ovelha.quadradao/5.0;reparou.definicao.artilheiro/6.0
-inala.fervido.engavetar;fracos.ovelha.quadradao/4.4;arrumar.etiquetar.pressione/1.0
-aifw.asfk;asdf.asd/20.20
+reparou.definicao.artilheiro;maloca.fungos.poderia/4.3;ocupei.embasando.ralar/3.3;inala.fervido.engavetar/10.4
+inala.fervido.engavetar;fracos.ovelha.quadradao/4.4;arrumar.etiquetar.pressione/1.0;fagocitose.crestar.esperanca/10.0
+arrumar.etiquetar.pressione;revaloriza.dignificante.velhos/10.0;reparou.definicao.artilheiro/5.5
+revaloriza.dignificante.velhos;inala.fervido.engavetar/6.2;ocupei.embasando.ralar/2.3;fagocitose.crestar.esperanca/15.0

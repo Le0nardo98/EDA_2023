@@ -32,13 +32,13 @@ int main() {
     Stack* inicioStack = NULL;
     ListaStack* inicioLista = NULL;
     FILE* dadosMeios, * dadosClientes, * dadosGestor, * dadosAluguer, * dadosTransacao, * dadosGrafo, * dadosAdjacentes;
-    int op, op_utilizador, utilizador_login = 0, gestor_login = 0, op_gestor, retFunc;
+    int op, opUtilizador, utilizadorLogin = 0, gestor_login = 0, op_gestor, retFunc;
     int novoCliente_codigo, novoCliente_NIF, novoCliente_saldo, novo_meio_codigo, novo_meio_custo, novo_gestor_codigo, codigo_meio_remover
         , codigo_cliente_remover, codigo_gestor_remover, codigo_login_utilizador;
-    float novo_meio_bateria, novo_meio_autonomia, novopesoAdjacente, tamanhoAdj;
+    float novo_meio_bateria, novo_meio_autonomia, novopesoAdjacente, tamanhoAdj, tamanhoTotal = 0, tamanhoIda = 0, tamanhoVolta = 0;
     char novoCliente_nome[MAX_LEN], novo_meio_nome[MAX_LEN], novo_meio_geocodigo[MAX_LEN], novo_gestor_nome[MAX_LEN], novo_gestor_senha[MAX_LEN],
         novo_gestor_area[MAX_LEN], novoverticeinicial[MAX_LEN], novoverticeFinal[MAX_LEN]
-        , verticeInicial[MAX_LEN], verticeDestino[MAX_LEN], novoCliente_geocodigo[MAX_LEN];
+        , verticeInicial[MAX_LEN], verticeDestino[MAX_LEN], novoCliente_geocodigo[MAX_LEN], verticePartida[MAX_LEN];;
 
 
     // No arranque é feito de imediato a leitura dos ficheiros.
@@ -76,11 +76,11 @@ int main() {
                 printf("Nao existem utilizadores, por favor registe-se.\n");
                 break;
             }
-            utilizador_login = 1;
-            while (utilizador_login > 0)
+            utilizadorLogin = 1;
+            while (utilizadorLogin > 0)
             {
-                op_utilizador = menuUtilizador();
-                switch (op_utilizador) {
+                opUtilizador = menuUtilizador();
+                switch (opUtilizador) {
                 case 1:
                     resFunc = listarMeios(inicioMeios);
                     switch (resFunc)
@@ -205,16 +205,28 @@ int main() {
                     switch (escolhaDist)
                     {
                     case 1:
-                        printf("Insira a partida e o destino:\n");
-                        strcpy(verticeInicial, "fagocitose.crestar.esperanca");
+                        printf("Insira a partida: ");
+                        scanf("%s", verticePartida);
+                        //strcpy(verticePartida, "fagocitose.crestar.esperanca");
+                        inicioLista = mostrarCaminhoIda(inicioGrafo, verticePartida, inicioStack, inicioLista, tamanhoIda);
+                        if (inicioLista == NULL)
+                        {
+                            printf("Nao existe caminho/Ponto Partida.\n");
+                            break;
+                        }
+                        inicioLista = retirarStackMaior(inicioLista);
+                        printf("Caminho de ida: ");
+                        mostrarCaminho(inicioLista);
+                        tamanhoTotal = inicioLista->tamanho;
+                        obterUltimoVertice(inicioLista, verticeInicial);
 
-                        tamanhoAdj = 0;
-                        float tamanhoBateria = 0;
-                        int camiao = 0;
-                        inicioLista = mostrarTeste(inicioGrafo, verticeInicial, inicioStack, inicioLista, tamanhoAdj, camiao);
+                        printf("\nCaminho de volta: ");
+                        inicioLista = mostrarCaminhoVolta(inicioGrafo, verticeInicial, verticePartida, inicioStack, inicioLista, tamanhoVolta);
                         inicioLista = retirarStackMaior(inicioLista);
                         mostrarCaminho(inicioLista);
-                        break;
+                        tamanhoTotal += inicioLista->tamanho;
+
+                        printf("\nKm's percorridos: %.2f\n", tamanhoTotal);
                     }
                     break;
                 case 8:
@@ -230,10 +242,9 @@ int main() {
                     scanf("%d", &codigoCliente);
                     printf("Introduza o nome do meio a procurar: ");
                     scanf("%s", tipoMeio);
-                    if (localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente, tipoMeio) < 0)
-                        printf("Erro nos clientes\n");
+                    localizacaoRaio(inicioGrafo, inicioClientes, raioVerificar, codigoCliente, tipoMeio);
                 case 0:
-                    utilizador_login = 0;
+                    utilizadorLogin = 0;
                     break;
                 }
             }

@@ -1347,8 +1347,8 @@ Meio* alterarMeio(Meio* inicioMeios)
 // ---------------------------------------------------FIM-ADICIONAR/REMOVER/ALTERAR MEIOS/CLIENTES/GESTORES----------------------------------------------------
 
 
-// ---------------------------------------------------------------INICIO_OP_UTILIZADOR-----------------------------------------------------------------
-#pragma region OP_Utilizador
+// ---------------------------------------------------------------INICIO_opUtilizador-----------------------------------------------------------------
+#pragma region opUtilizador
 // Função para carregamento de saldo, de um certo utilizador.
 // É pedido o codigo e o NIF, caso coincidam com algum dos utilizadores existentes é possivel carregar o saldo desse mesmo utilizador.
 Cliente* carregarSaldo(Cliente* inicioClientes, Transacao* inicioTransacao) {
@@ -1585,7 +1585,7 @@ void listarGeocodigo(Meio* inicioMeios)
     printf("------------------------------------------------------------------------------------------------------------------------\n");
 }
 #pragma endregion
-// -----------------------------------------------------------------FIM_OP_UTILIZADOR-------------------------------------------------------------------
+// -----------------------------------------------------------------FIM_opUtilizador-------------------------------------------------------------------
 
 
 // ---------------------------------------------------INICIO-LEITURA/ESCRITA/REPRESENTAÇÃO DE ALUGUER----------------------------------------------------
@@ -2362,7 +2362,7 @@ void mostrarCaminho(ListaStack* inicioLista) {
     }
 }
 
-ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float Tamanho, int camiao)
+ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho, int camiao)
 {
     Grafo* aux = inicioGrafo;
     Stack* auxStack = inicioStack;
@@ -2384,10 +2384,10 @@ ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioS
     {
         ListaStack* novaListaStack = malloc(sizeof(ListaStack));
         novaListaStack->novaStack = inicioStack;
-        novaListaStack->tamanho = Tamanho;
+        novaListaStack->tamanho = tamanho;
         novaListaStack->seguinteLista = inicioLista;
         inicioLista = novaListaStack;
-        Tamanho = 0;
+        tamanho = 0;
         return inicioLista;
     }
 
@@ -2427,7 +2427,7 @@ ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioS
             {
                 novaStack->visitado = true;
             }
-            inicioLista = mostrarTeste(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, Tamanho + auxAdj->peso, camiao);
+            inicioLista = mostrarTeste(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, tamanho + auxAdj->peso, camiao);
         }
         auxAdj = auxAdj->seguinteAdjacente;
     }
@@ -2518,6 +2518,249 @@ int todosVisitados(Stack* inicioStack, Grafo* inicioGrafo)
             return -2;
         }
         aux = aux->seguinteVertice;
+    }
+    return 1;
+}
+
+ListaStack* mostrarCaminhoIda(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho)
+{
+    Grafo* aux = inicioGrafo;
+    Stack* auxStack = inicioStack;
+    Adjacente* auxAdj = NULL;
+    if (existeVertice(aux, verticeAtual))
+    {
+        while (aux != NULL)
+        {
+            if (strcmp(aux->vertice, verticeAtual) == 0)
+            {
+                auxStack = inserirStack(auxStack, aux->vertice);
+                inicioStack = auxStack;
+                break;
+            }
+            aux = aux->seguinteVertice;
+        }
+    }
+    else
+    {
+        return NULL;
+    }
+    if (todosVisitados(inicioStack, inicioGrafo))
+    {
+        ListaStack* novaListaStack = malloc(sizeof(ListaStack));
+        novaListaStack->novaStack = inicioStack;
+        novaListaStack->tamanho = tamanho;
+        novaListaStack->seguinteLista = inicioLista;
+        inicioLista = novaListaStack;
+        tamanho = 0;
+        return inicioLista;
+    }
+
+    auxAdj = aux->adjacentes;
+    while (auxAdj != NULL)
+    {
+        if (!verticeVisitado(inicioStack, auxAdj->vertice))
+        {
+            Stack* novaStack = NULL;
+            Stack* auxStack2 = inicioStack;
+            Stack* stackBateriaBaixa = NULL;
+            while (auxStack2 != NULL)
+            {
+                Stack* novoNodo = malloc(sizeof(Stack));
+                strcpy(novoNodo->vertice, auxStack2->vertice);
+                novoNodo->seguinteStack = NULL;
+                if (novaStack == NULL)
+                    novaStack = novoNodo;
+                else
+                {
+                    Stack* aux = novaStack;
+                    while (aux->seguinteStack != NULL)
+                        aux = aux->seguinteStack;
+                    aux->seguinteStack = novoNodo;
+                }
+                auxStack2 = auxStack2->seguinteStack;
+            }
+            if (novaStack != NULL)
+            {
+                novaStack->visitado = true;
+            }
+            inicioLista = mostrarCaminhoIda(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, tamanho + auxAdj->peso);
+        }
+        auxAdj = auxAdj->seguinteAdjacente;
+    }
+    return inicioLista;
+}
+
+ListaStack* mostrarCaminhoVolta(Grafo* inicioGrafo, char verticeAtual[], char verticeDestino[], Stack* inicioStack, ListaStack* inicioLista, float tamanho)
+{
+    Grafo* aux = inicioGrafo;
+    Stack* auxStack = inicioStack;
+    Adjacente* auxAdj = NULL;
+    if (existeVertice(aux, verticeAtual))
+    {
+        while (aux != NULL)
+        {
+            if (strcmp(aux->vertice, verticeAtual) == 0)
+            {
+                auxStack = inserirStack(auxStack, aux->vertice);
+                inicioStack = auxStack;
+                break;
+            }
+            aux = aux->seguinteVertice;
+        }
+    }
+    if (/*todosVisitados(inicioStack, inicioGrafo) && */strcmp(verticeDestino, verticeAtual) == 0)
+    {
+        ListaStack* novaListaStack = malloc(sizeof(ListaStack));
+        novaListaStack->novaStack = inicioStack;
+        novaListaStack->tamanho = tamanho;
+        novaListaStack->seguinteLista = inicioLista;
+        inicioLista = novaListaStack;
+        tamanho = 0;
+        return inicioLista;
+    }
+
+    auxAdj = aux->adjacentes;
+    while (auxAdj != NULL)
+    {
+        if (!verticeVisitado(inicioStack, auxAdj->vertice))
+        {
+            Stack* novaStack = NULL;
+            Stack* auxStack2 = inicioStack;
+            Stack* stackBateriaBaixa = NULL;
+            while (auxStack2 != NULL)
+            {
+                Stack* novoNodo = malloc(sizeof(Stack));
+                strcpy(novoNodo->vertice, auxStack2->vertice);
+                novoNodo->seguinteStack = NULL;
+                if (novaStack == NULL)
+                    novaStack = novoNodo;
+                else
+                {
+                    Stack* aux = novaStack;
+                    while (aux->seguinteStack != NULL)
+                        aux = aux->seguinteStack;
+                    aux->seguinteStack = novoNodo;
+                }
+                auxStack2 = auxStack2->seguinteStack;
+            }
+            if (novaStack != NULL)
+            {
+                novaStack->visitado = true;
+            }
+            inicioLista = mostrarCaminhoVolta(inicioGrafo, auxAdj->vertice, verticeDestino, novaStack, inicioLista, tamanho + auxAdj->peso);
+        }
+        auxAdj = auxAdj->seguinteAdjacente;
+    }
+    return inicioLista;
+}
+
+ListaStack* mostrarCaminhoCamiao(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho)
+{
+    Grafo* aux = inicioGrafo;
+    Stack* auxStack = inicioStack;
+    Adjacente* auxAdj = NULL;
+    if (existeVertice(aux, verticeAtual))
+    {
+        while (aux != NULL)
+        {
+            if (strcmp(aux->vertice, verticeAtual) == 0)
+            {
+                auxStack = inserirStack(auxStack, aux->vertice);
+                inicioStack = auxStack;
+                break;
+            }
+            aux = aux->seguinteVertice;
+        }
+    }
+    else
+    {
+        return NULL;
+    }
+    if (todosVisitados(inicioStack, inicioGrafo))
+    {
+        ListaStack* novaListaStack = malloc(sizeof(ListaStack));
+        novaListaStack->novaStack = inicioStack;
+        novaListaStack->tamanho = tamanho;
+        novaListaStack->seguinteLista = inicioLista;
+        inicioLista = novaListaStack;
+        tamanho = 0;
+        return inicioLista;
+    }
+
+    auxAdj = aux->adjacentes;
+    ListaStack* camiaoCheioCaminho = NULL;
+    static int camiao = 0;
+    while (auxAdj != NULL)
+    {
+        if (!verticeVisitado(inicioStack, auxAdj->vertice))
+        {
+            Adjacente* auxAdjMeio = auxAdj;
+            while (auxAdjMeio->meios != NULL)
+            {
+                if (auxAdjMeio->meios->bateria < 50 && auxAdjMeio->meios->recolhido == 0)
+                {
+                    auxAdjMeio->meios->recolhido = 1;
+                    camiao++;
+                }
+                auxAdjMeio->meios = auxAdjMeio->meios->seguinteMeio;
+            }
+            Stack* novaStack = NULL;
+            Stack* auxStack2 = inicioStack;
+            Stack* stackBateriaBaixa = NULL;
+            while (auxStack2 != NULL)
+            {
+                Stack* novoNodo = malloc(sizeof(Stack));
+                strcpy(novoNodo->vertice, auxStack2->vertice);
+                novoNodo->seguinteStack = NULL;
+                if (novaStack == NULL)
+                    novaStack = novoNodo;
+                else
+                {
+                    Stack* aux = novaStack;
+                    while (aux->seguinteStack != NULL)
+                        aux = aux->seguinteStack;
+                    aux->seguinteStack = novoNodo;
+                }
+                auxStack2 = auxStack2->seguinteStack;
+            }
+            if (novaStack != NULL)
+            {
+                novaStack->visitado = true;
+            }
+            if (camiao >= 2)
+            {
+                camiao = 0;
+                camiaoCheioCaminho = novaStack;
+                inicioLista = mostrarCaminhoCamiao(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, tamanho + auxAdj->peso);
+            }
+            inicioLista = mostrarCaminhoCamiao(inicioGrafo, auxAdj->vertice, novaStack, inicioLista, tamanho + auxAdj->peso);
+        }
+        auxAdj = auxAdj->seguinteAdjacente;
+    }
+    return inicioLista;
+}
+
+ListaStack* adicionarCaminho(Stack* caminho, ListaStack* listaCaminhos, float tamanho)
+{
+    ListaStack* novoCaminho = malloc(sizeof(ListaStack));
+    novoCaminho->novaStack = caminho;
+    novoCaminho->tamanho = tamanho;
+    novoCaminho->seguinteLista = listaCaminhos;
+    return novoCaminho;
+}
+
+void obterUltimoVertice(ListaStack* inicioLista, char* vertice)
+{
+    ListaStack* auxLista = inicioLista;
+    while (auxLista != NULL)
+    {
+        Stack* auxStack = inicioLista->novaStack;
+        while (auxStack->seguinteStack != NULL)
+        {
+            auxStack = auxStack->seguinteStack;
+        }
+        strcpy(vertice, auxStack->vertice);
+        auxLista = auxLista->seguinteLista;
     }
     return 1;
 }

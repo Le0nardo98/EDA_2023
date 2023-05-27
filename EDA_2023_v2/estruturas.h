@@ -33,6 +33,7 @@ typedef struct RegistoMeios
 	float autonomia;
 	char geocodigo[MAX_LEN];
 	int custo;
+	int recolhido;
 	int ativo;
 	struct RegistoMeios* seguinteMeio; // endereço de memória para uma struct registo_meio
 } Meio;

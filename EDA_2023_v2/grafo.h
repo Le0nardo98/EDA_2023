@@ -89,10 +89,19 @@ int existeClienteTransacao(Transacao* inicio_transacao, int codVerificar);
 
 Transacao* criarTransacao(Transacao* inicio_transacao, int codigoCliente, int saldoCarregar, char nomeCliente[]);
 
-ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float Tamanho);
+ListaStack* mostrarTeste(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho);
 
 ListaStack* retirarStackMaior(ListaStack* inicioLista);
 
+ListaStack* mostrarCaminhoIda(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho);
+
+ListaStack* mostrarCaminhoVolta(Grafo* inicioGrafo, char verticeAtual[], char verticeDestino[], Stack* inicioStack, ListaStack* inicioLista, float tamanho);
+
+ListaStack* mostrarCaminhoCamiao(Grafo* inicioGrafo, char verticeAtual[], Stack* inicioStack, ListaStack* inicioLista, float tamanho);
+
+ListaStack* adicionarCaminho(Stack* caminho, ListaStack* listaCaminhos, float tamanho);
+
+void obterUltimoVertice(ListaStack* inicioLista, char* vertice);
 
 // -------------------------------------------------------------------FUNÇÕES_F-TRANSACOES--------------------------------------------------------------------
 #pragma endregion
