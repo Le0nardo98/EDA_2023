@@ -2078,13 +2078,13 @@ void listarGrafo(Grafo* inicioGrafo)
         printf("%s\n", inicioGrafo->vertice);
         inicioGrafo = inicioGrafo->seguinteVertice;
     }
-    printf("Prima espaco e de seguida enter para sair.");
-    while (continuar != " ")
+    printf("Prima qualquer tecla para sair.");
+    (void)getchar();
+    while (1)
     {
-        scanf("%c", &continuar);
-        if (continuar == ' ')
+        if (getch())
         {
-            printf("Voltando ao menu.\n");
+            printf("\nVoltando ao menu.");
             Sleep(2000);
             system("cls");
             return 0;
@@ -2098,7 +2098,7 @@ void listarAdjacentes(Grafo* inicioGrafo)
     while (inicioGrafo != NULL)
     {
         printf("Dados de %s:\n------------------------------------------------------------------------------------------------------------------------\n", inicioGrafo->vertice);
-        printf("Esta localizacao pode ir para:\n");
+        printf("Esta localizacao pode ir para: ");
         if (inicioGrafo->adjacentes == NULL)
         {
             printf("A localizacao %s nao tem destinos.\n", inicioGrafo->vertice);
@@ -2112,13 +2112,13 @@ void listarAdjacentes(Grafo* inicioGrafo)
         printf("\n");
         inicioGrafo = inicioGrafo->seguinteVertice;
     }
-    printf("Prima espaco e enter para sair.");
-    while (continuar != " ")
+    printf("Prima qualquer tecla para sair.");
+    (void)getchar();
+    while (1)
     {
-        scanf("%c", &continuar);
-        if (continuar == ' ')
+        if (getch())
         {
-            printf("Voltando ao menu.\n");
+            printf("\nVoltando ao menu.");
             Sleep(2000);
             system("cls");
             return 0;

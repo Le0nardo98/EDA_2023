@@ -208,6 +208,7 @@ int main() {
                         printf("Insira a partida: ");
                         scanf("%s", verticePartida);
                         //strcpy(verticePartida, "fagocitose.crestar.esperanca");
+                        inicioLista = NULL;
                         inicioLista = mostrarCaminhoIda(inicioGrafo, verticePartida, inicioStack, inicioLista, tamanhoIda);
                         if (inicioLista == NULL)
                         {
@@ -227,6 +228,8 @@ int main() {
                         tamanhoTotal += inicioLista->tamanho;
 
                         printf("\nKm's percorridos: %.2f\n", tamanhoTotal);
+                        free(inicioLista);
+                        break;
                     }
                     break;
                 case 8:
